@@ -1,0 +1,41 @@
+# robots.txt for HomoBlood / عالم الصحة
+User-agent: *
+Allow: /
+
+# Disallow admin or private paths (if any)
+# Disallow: /admin
+
+# Sitemap
+Sitemap: https://yourdomain.com/sitemap.xml
+public/
+├── assets/
+│   └── images/
+│       ├── logo.png                  (شعار الموقع)
+│       ├── hero/                     (صور الصفحة الرئيسية)
+│       │   ├── hero-main.jpg
+│       │   ├── hero-bg.jpg
+│       │   └── hero-mobile.jpg
+│       ├── packages/                 (صور الباقات)
+│       │   ├── package-1.jpg
+│       │   ├── package-2.jpg
+│       │   ├── package-3.jpg
+│       │   ├── package-4.jpg
+│       │   └── package-5.jpg
+│       ├── services/                 (صور الخدمات)
+│       │   ├── home-service.jpg
+│       │   ├── lab-tests.jpg
+│       │   └── medical-team.jpg
+│       ├── testimonials/             (صور العملاء/الشهادات)
+│       │   ├── client-1.jpg
+│       │   ├── client-2.jpg
+│       │   └── client-3.jpg
+│       ├── team/                     (صور الفريق)
+│       │   ├── doctor-1.jpg
+│       │   ├── doctor-2.jpg
+│       │   └── nurse-1.jpg
+│       └── blog/                     (صور المدونة)
+│           ├── post-1.jpg
+│           ├── post-2.jpg
+│           └── post-3.jpg
+├── logo.png
+└── robots.txt
