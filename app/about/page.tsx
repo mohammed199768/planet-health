@@ -102,18 +102,20 @@ export default function AboutPage() {
         />
 
         <div className="container relative z-10 py-24 text-center">
-          <div
-            className="inline-flex items-center justify-center w-28 h-28 bg-white/10 backdrop-blur-lg rounded-3xl p-4 shadow-2xl mb-6 border border-white/20"
-            style={{ animation: 'fadeInUp 0.8s ease-out' }}
-          >
-            <Image
-              src="/assets/images/logo.png"
-              alt="شعار عالم الصحة"
-              width={80}
-              height={80}
-              className="rounded-full"
-            />
-          </div>
+      <div
+  className="inline-flex items-center justify-center w-28 h-28 bg-white/10 backdrop-blur-lg rounded-3xl p-4 shadow-2xl mb-6 border border-white/20"
+  style={{ animation: 'fadeInUp 0.8s ease-out' }}
+>
+  <div className="relative w-full h-full">
+    <Image
+      src="/assets/images/logo.png"
+      alt="شعار عالم الصحة"
+      fill
+      className="rounded-full object-contain"
+      priority
+    />
+  </div>
+</div>
 
           <h1
             className="text-5xl md:text-6xl font-black mb-4"

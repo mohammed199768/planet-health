@@ -3,6 +3,7 @@ import { Cairo } from 'next/font/google';
 import './globals.css';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import AnalyticsTracker from './AnalyticsTracker';
 
 const cairo = Cairo({
   subsets: ['arabic'],
@@ -13,18 +14,30 @@ const cairo = Cairo({
 
 export const metadata: Metadata = {
   title: 'عالم الصحة — المختبر لعندك',
-  description: 'مبادرة أردنية لتقديم خدمات المختبر إلى باب بيتك — بدقة، خصوصية، وثقة.',
-  keywords: 'مختبر منزلي، فحوصات طبية، الأردن، عمان، سحب دم منزلي',
+  description:
+    'مبادرة أردنية لتقديم خدمات المختبر إلى باب بيتك — بدقة، خصوصية، وثقة.',
+  keywords: ['مختبر منزلي', 'فحوصات طبية', 'الأردن', 'عمان', 'سحب دم منزلي'],
+
   icons: {
     icon: '/assets/images/logo.png',
     apple: '/assets/images/logo.png',
   },
+
   openGraph: {
     title: 'عالم الصحة — المختبر لعندك',
     description: 'مبادرة أردنية لتقديم خدمات المختبر إلى باب بيتك',
-    locale: 'ar_AR',
+    url: 'https://planet-health-jo.com', // إن توفر
+    siteName: 'عالم الصحة',
     type: 'website',
-    images: ['/assets/images/logo.png'],
+    locale: 'ar_AR',
+    images: [
+      {
+        url: '/assets/images/logo.png',
+        width: 512,
+        height: 512,
+        alt: 'شعار عالم الصحة',
+      },
+    ],
   },
 };
 
@@ -47,6 +60,9 @@ export default function RootLayout({
         />
       </head>
       <body className={cairo.variable}>
+        {/* تسجيل الزيارات */}
+        <AnalyticsTracker />
+
         <Navbar />
         {children}
         <Footer />

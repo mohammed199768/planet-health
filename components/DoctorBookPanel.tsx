@@ -130,13 +130,14 @@ export default function DoctorBookPanel() {
   }}
 >
   <div className="bp-badge inline-flex items-center bg-[var(--muted)] border border-[rgba(0,0,0,0.06)] rounded-full px-4 py-2 font-extrabold text-[var(--primary-dark)] shadow-md whitespace-nowrap gap-1.5">
-    <Image
-      src="/assets/images/logo.png"
-      alt="شعار"
-      width={28}
-      height={28}
-      className="block shrink-0"
-    />
+   <Image
+  src="/assets/images/logo.png"
+  width={32}
+  height={32}
+  className="block shrink-0"
+  alt="شعار"
+/>
+
     <span className="pl-3 pr-1 text-[13px] sm:text-[14px] md:text-[15px]">
       حجز طبيب
     </span>

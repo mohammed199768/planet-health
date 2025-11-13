@@ -3,6 +3,7 @@
 import { useState, FormEvent, useEffect } from 'react';
 import Image from 'next/image';
 import { createBooking, type BookingData } from '@/lib/firebase/bookings';
+import { trackEvent } from '@/lib/firebase/analytics'; // 👈 جديد
 
 const AMMAN_AREAS = {
   'غرب عمّان': [
@@ -45,6 +46,12 @@ export default function BookPanel() {
         setFormData((prev) => ({ ...prev, package: packageParam }));
         setIsOpen(true);
 
+        // 🔹 حدث: فتح البوك بانل من URL مع package
+        trackEvent('book_panel_open', {
+          source: 'url_param',
+          packageName: packageParam,
+        });
+
         setTimeout(() => {
           const bookPanel = document.getElementById('book-panel');
           if (bookPanel) {
@@ -61,12 +68,26 @@ export default function BookPanel() {
 
     const { name, phone, location } = formData;
 
+    // 🔹 حدث: محاولة حجز
+    trackEvent('booking_attempt', {
+      nameLength: name.trim().length,
+      hasLocation: !!location,
+      packageName: formData.package || 'غير محدد',
+    });
+
     if (name.trim().length < 3) {
       setAlert({
         show: true,
         message: 'الاسم مطلوب (3 أحرف على الأقل).',
         type: 'error',
       });
+
+      // 🔹 حدث: فشل حجز بسبب الاسم
+      trackEvent('booking_validation_error', {
+        field: 'name',
+        reason: 'too_short',
+      });
+
       return;
     }
 
@@ -76,6 +97,13 @@ export default function BookPanel() {
         message: 'رقم الهاتف يجب أن يبدأ بـ 077/078/079 وأن يكون 10 أرقام.',
         type: 'error',
       });
+
+      // 🔹 حدث: فشل حجز بسبب الهاتف
+      trackEvent('booking_validation_error', {
+        field: 'phone',
+        reason: 'invalid_format',
+      });
+
       return;
     }
 
@@ -101,6 +129,12 @@ export default function BookPanel() {
           type: 'success',
         });
 
+        // 🔹 حدث: حجز ناجح
+        trackEvent('booking_success', {
+          packageName: bookingData.packageName,
+          area: bookingData.address || null,
+        });
+
         setFormData({ name: '', phone: '', location: '', package: '' });
 
         const msg = `طلب حجز مختبر:
@@ -123,8 +157,26 @@ export default function BookPanel() {
         message: 'حدث خطأ أثناء الإرسال.',
         type: 'error',
       });
+
+      // 🔹 حدث: خطأ سيرفر/فايربيس
+      trackEvent('booking_error', {
+        packageName: formData.package || 'غير محدد',
+      });
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleToggleOpen = () => {
+    const next = !isOpen;
+    setIsOpen(next);
+
+    if (next) {
+      // 🔹 حدث: فتح البوك بانل يدويًا من الزر
+      trackEvent('book_panel_open', {
+        source: 'button',
+        packageName: formData.package || null,
+      });
     }
   };
 
@@ -143,13 +195,14 @@ export default function BookPanel() {
         }}
       >
         <div className="bp-badge inline-flex items-center bg-[var(--muted)] border border-[rgba(0,0,0,0.06)] rounded-full px-4 py-2 font-extrabold text-[var(--primary-dark)] shadow-md whitespace-nowrap gap-1.5">
-          <Image
-            src="/assets/images/logo.png"
-            alt="شعار"
-            width={28}
-            height={28}
-            className="block shrink-0"
-          />
+         <Image
+  src="/assets/images/logo.png"
+  width={32}
+  height={32}
+  className="block shrink-0"
+  alt="شعار"
+/>
+
           <span className="pl-3 pr-1 text-[13px] sm:text-[14px] md:text-[15px]">
             حجز المختبر
           </span>
@@ -165,7 +218,7 @@ export default function BookPanel() {
         <div className="flex-1 w-full sm:w-auto flex justify-end">
           <button
             className="btn whitespace-nowrap px-4 sm:px-5 py-2 text-sm md:text-base min-w-[140px] flex items-center justify-center transition-all duration-200 hover:scale-105 cursor-pointer w-full sm:w-auto"
-            onClick={() => setIsOpen(!isOpen)}
+            onClick={handleToggleOpen} // 👈 استبدلنا setIsOpen المباشر
             type="button"
             style={{
               background: isOpen ? 'var(--primary-dark)' : 'var(--accent)',

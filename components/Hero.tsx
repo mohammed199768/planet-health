@@ -172,7 +172,7 @@ export default function Hero() {
             <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 bg-white/10 border border-white/30 backdrop-blur-md shadow-md">
               <span className="w-2 h-2 rounded-full bg-[var(--accent)]" />
               <span className="text-xs md:text-sm font-semibold">
-                عالم الصحة — المختبر لعندك
+                عالم الصحة المختبر لعندك
               </span>
             </div>
 

@@ -33,16 +33,16 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
           <div className="lg:col-span-2">
             <div className="flex items-center gap-3 mb-4">
-              <div className="relative w-14 h-14">
-                <Image
-                  src="/assets/images/logo.png"
-                  alt="شعار عالم الصحة"
-                  width={56}
-                  height={56}
-                  className="rounded-full shadow-lg"
-                  style={{ objectFit: 'contain' }}
-                />
-              </div>
+        <div className="relative w-14 h-14">
+  <Image
+    src="/assets/images/logo.png"
+    alt="شعار عالم الصحة"
+    fill
+    className="rounded-full shadow-lg object-contain"
+    priority
+  />
+</div>
+
               <h3 className="text-white text-2xl font-extrabold m-0">عالم الصحة</h3>
             </div>
             <p className="mb-5 text-[#c5e5d0] leading-relaxed max-w-md">

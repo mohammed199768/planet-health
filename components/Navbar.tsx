@@ -63,17 +63,17 @@ export default function Navbar() {
         <div className="container">
           <div className="flex items-center justify-between h-16">
             <Link href="/" className="brand flex items-center gap-2.5 font-extrabold no-underline hover:no-underline">
-              <div className="relative w-12 h-12">
-                <Image
-                  src="/assets/images/logo.png"
-                  alt="شعار عالم الصحة"
-                  width={48}
-                  height={48}
-                  className="rounded-full shadow-lg"
-                  style={{ objectFit: 'contain' }}
-                  priority
-                />
-              </div>
+<div className="relative w-12 h-12">
+  <Image
+    src="/assets/images/logo.png"
+    alt="شعار عالم الصحة"
+    fill
+    sizes="48px"
+    className="rounded-full shadow-lg object-contain"
+    priority
+  />
+</div>
+
               <span className="text-white text-lg hidden sm:inline drop-shadow-md">
                 عالم الصحة
               </span>
