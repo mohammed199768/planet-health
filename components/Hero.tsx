@@ -228,9 +228,12 @@ export default function Hero() {
               <BookPanel />
             </div>
 
-            <div className="rounded-3xl bg-white/10 border border-white/25 backdrop-blur-xl shadow-2xl p-3 md:p-4">
-              <DoctorBookPanel />
-            </div>
+<div className="w-full flex justify-center">
+  <div className="rounded-[26px] bg-white/10 border border-white/25 backdrop-blur-xl shadow-2xl p-2 sm:p-3 md:p-4 overflow-hidden max-w-[760px] w-full">
+    <DoctorBookPanel />
+  </div>
+</div>
+
           </div>
         </div>
       </div>

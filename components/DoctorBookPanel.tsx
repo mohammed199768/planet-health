@@ -3,7 +3,25 @@
 import { useState, FormEvent } from 'react';
 import Image from 'next/image';
 import { createBooking, type BookingData } from '@/lib/firebase/bookings';
-
+const AMMAN_AREAS = {
+  'غرب عمّان': [
+    'عبدون',
+    'دابوق',
+    'خلدا',
+    'تلاع العلي',
+    'الرابية',
+    'الصويفية',
+    'أم أذينة',
+    'أم السماق',
+    'دير غبار',
+    'مرج الحمام',
+    'ناعور',
+  ],
+  'شمال عمّان': ['الجبيهة', 'صويلح', 'أبو نصير', 'ضاحية الرشيد', 'شفا بدران'],
+  'وسط عمّان': ['وسط البلد', 'جبل عمّان', 'جبل اللويبدة', 'العبدلي'],
+  'شرق عمّان': ['ماركا', 'النزهة', 'الأشرفية', 'القويسمة'],
+  'جنوب عمّان': ['المقابلين', 'خريبة السوق', 'سحاب'],
+};
 export default function DoctorBookPanel() {
   const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState({
@@ -98,66 +116,71 @@ export default function DoctorBookPanel() {
     }
   };
 
-  return (
-    <div
-      id="doctor-book-panel"
-      className="relative max-w-[820px] mx-auto px-4 grid gap-3.5 justify-center items-start py-4"
+ return (
+  <div
+    id="doctor-book-panel"
+    className="relative w-full flex flex-col items-center gap-3.5"
+  >
+   <div
+  className="bp-inner w-full rounded-[24px] px-4 py-3 sm:px-5 sm:py-4 flex flex-wrap items-center gap-2 sm:gap-3.5 shadow-lg backdrop-blur-md"
+  style={{
+    background: 'rgba(255,255,255,0.9)',
+    border: '1px solid rgba(255,255,255,0.8)',
+    boxShadow: '0 8px 32px rgba(0,0,0,0.06)',
+  }}
+>
+  <div className="bp-badge inline-flex items-center bg-[var(--muted)] border border-[rgba(0,0,0,0.06)] rounded-full px-4 py-2 font-extrabold text-[var(--primary-dark)] shadow-md whitespace-nowrap gap-1.5">
+    <Image
+      src="/assets/images/logo.png"
+      alt="شعار"
+      width={28}
+      height={28}
+      className="block shrink-0"
+    />
+    <span className="pl-3 pr-1 text-[13px] sm:text-[14px] md:text-[15px]">
+      حجز طبيب
+    </span>
+  </div>
+
+  <div className="bp-copy flex flex-col gap-0.5 min-w-0 hidden sm:flex">
+    <strong className="font-black text-[#17392d]">طبيب لعندك</strong>
+    <span className="text-[#486358] text-[13px]">
+      كشف منزلي • رعاية طبية في بيتك
+    </span>
+  </div>
+
+  <div className="flex-1 w-full sm:w-auto flex justify-end">
+    <button
+      className="btn whitespace-nowrap px-4 sm:px-5 py-2 text-sm md:text-base min-w-[140px] flex items-center justify-center transition-all duration-200 hover:scale-105 cursor-pointer w-full sm:w-auto"
+      onClick={() => setIsOpen(!isOpen)}
+      type="button"
+      style={{
+        background: isOpen ? 'var(--primary-dark)' : 'var(--accent)',
+        boxShadow: '0 4px 16px rgba(115,160,67,.35)',
+      }}
     >
-      <div
-        className="bp-inner w-full max-w-[680px] rounded-2xl px-5 py-4 flex gap-3.5 items-center justify-between shadow-lg backdrop-blur-md"
-        style={{
-          background: 'rgba(255,255,255,0.85)',
-          border: '1px solid rgba(255,255,255,0.6)',
-          boxShadow: '0 8px 32px rgba(0,0,0,0.08)',
-        }}
-      >
-<div className="bp-badge inline-flex items-center bg-[var(--muted)] border border-[rgba(0,0,0,0.06)] rounded-full px-4 py-2 font-extrabold text-[var(--primary-dark)] shadow-md whitespace-nowrap gap-1.5">
-  <Image
-    src="/assets/images/logo.png"
-    alt="شعار"
-    width={28}
-    height={28}
-    className="block shrink-0"
-  />
-  <span className="pl-3 pr-1 text-[14px] md:text-[15px] lg:text-[16px]">
-    حجز طبيب
-  </span>
+      {isOpen ? 'إغلاق' : 'احجز طبيب'}
+    </button>
+  </div>
 </div>
 
-        <div className="bp-copy flex flex-col gap-0.5 min-w-0 hidden sm:flex">
-          <strong className="font-black text-[#17392d]">طبيب لعندك</strong>
-          <span className="text-[#486358] text-[13px]">
-            كشف منزلي • رعاية طبية في بيتك
-          </span>
-        </div>
 
-        <button
-  className="btn whitespace-nowrap px-5 py-2 text-sm md:text-base min-w-[140px] flex items-center justify-center"
-          onClick={() => setIsOpen(!isOpen)}
-          type="button"
-          style={{
-            background: isOpen ? 'var(--primary-dark)' : 'var(--accent)',
-            boxShadow: '0 4px 16px rgba(115,160,67,.35)',
-          }}
-        >
-          {isOpen ? 'إغلاق' : 'احجز طبيب'}
-        </button>
-      </div>
+    <form
+      onSubmit={handleSubmit}
+      className={`book-form w-full rounded-[24px] px-4 py-4 sm:p-6 mt-1 transition-all duration-400 backdrop-blur-md ${
+        isOpen
+          ? 'opacity-100 translate-y-0 scale-100 h-auto overflow-visible'
+          : 'opacity-0 translate-y-[-10px] scale-95 h-0 overflow-hidden'
+      }`}
+      style={{
+        background: 'rgba(255,255,255,0.97)',
+        border: '1px solid rgba(0,0,0,0.05)',
+        boxShadow: isOpen ? '0 12px 40px rgba(0,0,0,0.1)' : 'none',
+        pointerEvents: isOpen ? 'auto' : 'none',
+      }}
+    >
+     
 
-      <form
-        onSubmit={handleSubmit}
-        className={`book-form w-full max-w-[680px] rounded-2xl p-6 transition-all duration-400 backdrop-blur-md ${
-          isOpen
-            ? 'opacity-100 translate-y-0 scale-100 mt-4 h-auto overflow-visible'
-            : 'opacity-0 translate-y-[-10px] scale-95 h-0 overflow-hidden mt-0'
-        }`}
-        style={{
-          background: 'rgba(255,255,255,0.95)',
-          border: '1px solid rgba(0,0,0,0.08)',
-          boxShadow: isOpen ? '0 12px 40px rgba(0,0,0,0.1)' : 'none',
-          pointerEvents: isOpen ? 'auto' : 'none',
-        }}
-      >
         <div className="grid md:grid-cols-2 gap-4">
           <input
             className="input"
@@ -177,15 +200,28 @@ export default function DoctorBookPanel() {
           />
         </div>
 
-        <div className="grid md:grid-cols-2 gap-4 mt-4">
-          <input
+       <div className="grid md:grid-cols-2 gap-4 mt-4">
+          <select
             className="input"
             name="location"
-            placeholder="العنوان / المنطقة بالتفصيل *"
             value={formData.location}
-            onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, location: e.target.value })
+            }
             required
-          />
+          >
+            <option value="">اختر المنطقة…</option>
+            {Object.entries(AMMAN_AREAS).map(([group, areas]) => (
+              <optgroup key={group} label={group}>
+                {areas.map((area) => (
+                  <option key={area} value={area}>
+                    {area}
+                  </option>
+                ))}
+              </optgroup>
+            ))}
+            <option value="أخرى">أخرى</option>
+          </select>
 
           <select
             className="input"
