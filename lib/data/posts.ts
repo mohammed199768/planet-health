@@ -34,7 +34,7 @@ export const posts: Post[] = [
     `,
     category: 'صحة عامة',
     date: '10 نوفمبر 2025',
-    image: './assets/images/blog/skin.jpg',
+    image: 'https://images.unsplash.com/photo-1555820585-c5ae44394b79?q=80&w=425&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     author: 'محمد الدومي',
   },
 
@@ -67,7 +67,7 @@ export const posts: Post[] = [
     `,
     category: 'تجميل طبي',
     date: '08 نوفمبر 2025',
-    image: './assets/images/blog/hair.jpg',
+    image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?q=80&w=869&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     author: 'د. أحمد الأخرس',
   },
 
@@ -97,7 +97,7 @@ export const posts: Post[] = [
     `,
     category: 'صحة الرجل',
     date: '06 نوفمبر 2025',
-    image: './assets/images/blog/angry.jpg',
+    image: 'https://images.unsplash.com/photo-1639756012448-466f9735b067?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     author: 'محمد الدومي',
   },
 
@@ -123,7 +123,7 @@ export const posts: Post[] = [
     `,
     category: 'صحة عامة',
     date: '03 نوفمبر 2025',
-    image: './assets/images/blog/diabetes.jpeg',
+    image: 'https://plus.unsplash.com/premium_photo-1680221453924-fcc37377f18e?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     author: 'د. أحمد الأخرس',
   },
 
@@ -148,7 +148,7 @@ export const posts: Post[] = [
     `,
     category: 'تغذية',
     date: '01 نوفمبر 2025',
-    image: './assets/images/blog/vitamind.jpg',
+    image: 'https://images.unsplash.com/photo-1615199951711-efaf9391bfc8?q=80&w=873&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     author: 'محمد الدومي',
   },
 
@@ -174,7 +174,7 @@ export const posts: Post[] = [
     `,
     category: 'هرمونات',
     date: '28 أكتوبر 2025',
-    image: './assets/images/blog/TSH.jpg',
+    image: 'https://plus.unsplash.com/premium_photo-1661779717978-d7937fa08250?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     author: 'د. أحمد الأخرس',
   },
 
@@ -200,7 +200,7 @@ export const posts: Post[] = [
     `,
     category: 'نصائح',
     date: '26 أكتوبر 2025',
-    image: './assets/images/blog/withdraw.jpg',
+    image: 'https://plus.unsplash.com/premium_photo-1723044801360-caf40fece7ff?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     author: 'محمد الدومي',
   },
 
@@ -226,7 +226,7 @@ export const posts: Post[] = [
     `,
     category: 'صحة عامة',
     date: '22 أكتوبر 2025',
-    image: './assets/images/blog/ferritin.jpg',
+    image: 'https://plus.unsplash.com/premium_photo-1682309704250-6bac0f499665?q=80&w=912&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     author: 'د. أحمد الأخرس',
   },
 
@@ -252,7 +252,7 @@ export const posts: Post[] = [
     `,
     category: 'خدماتنا',
     date: '18 أكتوبر 2025',
-    image: './assets/images/blog/withdraw.jpg',
+    image: 'https://images.unsplash.com/photo-1758691462321-9b6c98c40f7e?q=80&w=1032&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     author: 'محمد الدومي',
   },
 ];
