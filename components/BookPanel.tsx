@@ -135,16 +135,19 @@ export default function BookPanel() {
           boxShadow: '0 8px 32px rgba(0,0,0,0.08)',
         }}
       >
-        <div className="bp-badge inline-flex items-center gap-2 bg-[var(--muted)] border border-[rgba(0,0,0,0.06)] rounded-full px-3 py-2 font-extrabold text-[var(--primary-dark)] shadow-md">
-          <Image
-            src="/assets/images/logo.png"
-            alt=""
-            width={28}
-            height={28}
-            className="block"
-          />
-          <span>سحب منزلي</span>
-        </div>
+<div className="bp-badge inline-flex items-center bg-[var(--muted)] border border-[rgba(0,0,0,0.06)] rounded-full px-4 py-2 font-extrabold text-[var(--primary-dark)] shadow-md whitespace-nowrap gap-1.5">
+  <Image
+    src="/assets/images/logo.png"
+    alt="شعار"
+    width={28}
+    height={28}
+    className="block shrink-0"
+  />
+  <span className="pl-3 pr-1 text-[14px] md:text-[15px] lg:text-[16px]">
+    حجز المختبر
+  </span>
+</div>
+
 
         <div className="bp-copy flex flex-col gap-0.5 min-w-0 hidden sm:flex">
           <strong className="font-black text-[#17392d]">مختبرك لعندك</strong>
@@ -154,7 +157,8 @@ export default function BookPanel() {
         </div>
 
         <button
-          className="btn transition-all duration-200 hover:scale-105 cursor-pointer"
+            className="btn whitespace-nowrap px-5 py-2 text-sm md:text-base min-w-[140px] flex items-center justify-center"
+
           onClick={() => setIsOpen(!isOpen)}
           type="button"
           style={{

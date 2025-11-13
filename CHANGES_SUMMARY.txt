@@ -1,82 +1,2993 @@
-========================================
-FIREBASE FIX - SUMMARY OF CHANGES
-========================================
 
-FILES MODIFIED:
----------------
+├── app/
+│   ├── layout.tsx          # Layout رئيسي مع Navbar & Footer
+│   ├── page.tsx            # الصفحة الرئيسية
+│   ├── packages/page.tsx   # صفحة الباقات
+│   ├── about/page.tsx      # صفحة من نحن
+│   └── contact/page.tsx    # صفحة التواصل
+├── components/
+│   ├── Navbar.tsx          # شريط التنقل الزجاجي
+│   ├── Footer.tsx          # تذييل الموقع
+│   ├── Hero.tsx            # قسم البطل مع الديكور
+│   ├── BookPanel.tsx       # نموذج الحجز
+│   ├── PackageCard.tsx     # بطاقة الباقة
+│   └── ...
+├── lib/
+│   ├── data/               # ملفات البيانات TypeScript
+│   │   ├── packages.ts     # بيانات الباقات
+│   │   ├── posts.ts        # المقالات
+│   │   ├── media.ts        # الصور والفيديو
+│   │   └── testimonials.ts # آراء العملاء
+│   └── firebase/           # إعداد Firebase
+│       ├── client.ts       # تهيئة Firebase
+│       └── bookings.ts     # وظائف الحجز
+├── public/assets/          # الصور والملفات الثابتة
+└── styles/globals.css      # الأنماط العالمية مع متغيرات الهوية
+```
+``css
+:root {
+  --primary: #2C764A;      /* الأخضر الأساسي */
+  --primary-dark: #1F5137; /* أخضر داكن */
+  --accent: #73A043;       /* الأخضر الفاتح */
+  --muted: #eef5f0;        /* خلفية فاتحة */
+  --ink: #0F172A;          /* لون النص الرئيسي */
+  --card: #ffffff;         /* خلفية البطاقات */
+  --radius: 20px;          /* نصف قطر الحواف */
+}
+app/about/page.tsx
+'use client';
 
-1. lib/firebase/config.ts
-   - Added getApp import
-   - Added validation function for config values
-   - Improved initialization logic to prevent re-initialization
-   - Added measurementId support
-   - Added proper TypeScript assertions (!)
-   
-2. .env
-   - Fixed NEXT_PUBLIC_FIREBASE_APP_ID
-   - Changed from: 1:892627508279:web:planet-health-jo
-   - Changed to:   1:892627508279:web:e0a71a7fee252b94b073b2
+import { useEffect, useState } from 'react';
+import Image from 'next/image';
 
-3. .env.local.example
-   - Added all Firebase environment variables as documentation
-   - Helps developers know what variables are needed
+function animateCounter(element: HTMLElement, target: number, duration: number) {
+  const start = 0;
+  const increment = target / (duration / 16);
+  let current = start;
 
-4. app/blog/page.tsx
-   - Restored file (was corrupted)
+  const timer = setInterval(() => {
+    current += increment;
+    if (current >= target) {
+      element.textContent = Math.round(target).toString();
+      clearInterval(timer);
+    } else {
+      element.textContent = Math.round(current).toString();
+    }
+  }, 16);
+}
 
-FILES CREATED:
---------------
+export default function AboutPage() {
+  const [hasAnimated, setHasAnimated] = useState(false);
 
-5. .vercelignore
-   - Prevents .env files from being uploaded to Vercel
-   - Security measure
+  useEffect(() => {
+    if (!hasAnimated) {
+      const stats = { visitors: 5420, clients: 1230, tests: 8750 };
 
-6. FIREBASE_FIX_REPORT.md
-   - Complete documentation in Arabic
-   - Detailed explanations of all changes
-   - Testing procedures
-   - Troubleshooting guide
+      Object.entries(stats).forEach(([key, value]) => {
+        const el = document.querySelector(`[data-counter="${key}"]`) as HTMLElement;
+        if (el) animateCounter(el, value, 1200);
+      });
 
-7. VERCEL_SETUP.md
-   - Quick guide for Vercel setup in Arabic
-   - Step-by-step instructions
-   - Environment variables list
+      setHasAnimated(true);
+    }
+  }, [hasAnimated]);
 
-8. CHANGES_SUMMARY.txt
-   - This file - quick reference
+  const features = [
+    {
+      icon: '🎯',
+      title: 'دقة عالية',
+      desc: 'نعمل مع أفضل المختبرات المعتمدة لضمان نتائج دقيقة وموثوقة'
+    },
+    {
+      icon: '🔒',
+      title: 'خصوصية تامة',
+      desc: 'نحترم خصوصيتك ونحافظ على سرية معلوماتك الطبية'
+    },
+    {
+      icon: '🏠',
+      title: 'خدمة منزلية',
+      desc: 'فريق مختص يصل إلى منزلك في الوقت المناسب لك'
+    },
+    {
+      icon: '⚡',
+      title: 'نتائج سريعة',
+      desc: 'نتائج دقيقة في وقت قياسي عبر واتساب أو البريد'
+    }
+  ];
 
-========================================
-ENVIRONMENT VARIABLES NEEDED IN VERCEL:
-========================================
+  const values = [
+    'الدقّة قبل السرعة',
+    'احترام خصوصية المريض',
+    'تبسيط المعلومة الطبية',
+    'خدمة ما بعد الفحص',
+    'التطوير المستمر',
+    'الشفافية في التعامل'
+  ];
 
-NEXT_PUBLIC_FIREBASE_API_KEY=AIzaSyDxBddPLX3JYEvX0jzU9qE4Hku7zY_7Z-I
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=planet-health-jo.firebaseapp.com
-NEXT_PUBLIC_FIREBASE_PROJECT_ID=planet-health-jo
-NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=planet-health-jo.appspot.com
-NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=892627508279
-NEXT_PUBLIC_FIREBASE_APP_ID=1:892627508279:web:e0a71a7fee252b94b073b2
+  return (
+    <>
+      <header
+        className="about-hero relative text-white overflow-hidden"
+        style={{
+          background: 'linear-gradient(135deg, #1a4d2e 0%, #2d6a4f 50%, #40916c 100%)',
+          isolation: 'isolate',
+        }}
+      >
+        <div
+          className="absolute inset-0 opacity-10"
+          style={{
+            backgroundImage: 'radial-gradient(circle at 20px 20px, rgba(255,255,255,0.15) 2px, transparent 0)',
+            backgroundSize: '40px 40px',
+          }}
+        />
 
-========================================
-NEXT STEPS:
-========================================
+        <div
+          className="absolute top-10 right-10 w-72 h-72 rounded-full opacity-20 blur-3xl"
+          style={{
+            background: 'radial-gradient(circle, #73A043, transparent)',
+            animation: 'float 8s ease-in-out infinite',
+          }}
+        />
 
-1. Add environment variables in Vercel Dashboard
-2. Redeploy the project
-3. Add authorized domains in Firebase Console:
-   - localhost
-   - *.vercel.app
-   - your custom domain (if any)
-4. Test the application
+        <div
+          className="absolute bottom-10 left-10 w-96 h-96 rounded-full opacity-15 blur-3xl"
+          style={{
+            background: 'radial-gradient(circle, #52b788, transparent)',
+            animation: 'float 10s ease-in-out infinite',
+            animationDelay: '-2s',
+          }}
+        />
 
-========================================
-BUILD STATUS:
-========================================
+        <div className="container relative z-10 py-24 text-center">
+          <div
+            className="inline-flex items-center justify-center w-28 h-28 bg-white/10 backdrop-blur-lg rounded-3xl p-4 shadow-2xl mb-6 border border-white/20"
+            style={{ animation: 'fadeInUp 0.8s ease-out' }}
+          >
+            <Image
+              src="/assets/images/logo.png"
+              alt="شعار عالم الصحة"
+              width={80}
+              height={80}
+              className="rounded-full"
+            />
+          </div>
 
-✅ npm run build - SUCCESS
-✅ All TypeScript types - VALID
-✅ No Firebase errors locally
-✅ Code compiles without errors
+          <h1
+            className="text-5xl md:text-6xl font-black mb-4"
+            style={{ animation: 'fadeInUp 0.8s ease-out 0.1s backwards' }}
+          >
+            من نحن
+          </h1>
 
-Ready for deployment to Vercel!
+          <p
+            className="text-xl md:text-2xl opacity-95 mb-10 max-w-3xl mx-auto leading-relaxed"
+            style={{ animation: 'fadeInUp 0.8s ease-out 0.2s backwards' }}
+          >
+            مبادرة أردنية رائدة لتقديم خدمات المختبر الطبي إلى باب بيتك
+            <br />
+            <span className="text-lg opacity-80">بدقة، خصوصية، وثقة</span>
+          </p>
 
-========================================
+          <div
+            className="flex justify-center flex-wrap gap-6 mt-12"
+            style={{ animation: 'fadeInUp 0.8s ease-out 0.3s backwards' }}
+          >
+            {[
+              { label: 'الزوار', value: 'visitors', target: 5420 },
+              { label: 'العملاء', value: 'clients', target: 1230 },
+              { label: 'الفحوصات', value: 'tests', target: 8750 }
+            ].map((stat, idx) => (
+              <div
+                key={idx}
+                className="stat-card text-center min-w-[160px] rounded-2xl p-6 px-8 backdrop-blur-xl transition-all hover:scale-105 hover:shadow-2xl"
+                style={{
+                  background: 'rgba(255,255,255,0.15)',
+                  border: '1px solid rgba(255,255,255,0.25)',
+                  boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
+                }}
+              >
+                <div className="text-sm opacity-90 mb-2">{stat.label}</div>
+                <div
+                  className="num text-4xl font-black text-white"
+                  data-counter={stat.value}
+                >
+                  0
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <style jsx>{`
+          @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            50% { transform: translateY(-30px) translateX(20px); }
+          }
+          @keyframes fadeInUp {
+            from {
+              opacity: 0;
+              transform: translateY(30px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+        `}</style>
+      </header>
+
+      <main className="about section py-20">
+        <div className="container">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-black text-[var(--primary-dark)] mb-4">لماذا عالم الصحة؟</h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              نجمع بين الاحترافية الطبية وسهولة الوصول لنقدم لك تجربة فريدة
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
+            {features.map((feature, idx) => (
+              <div
+                key={idx}
+                className="feature-card group relative overflow-hidden rounded-2xl p-8 text-center transition-all hover:shadow-2xl hover:-translate-y-2"
+                style={{
+                  background: 'white',
+                  border: '1px solid rgba(0,0,0,0.05)',
+                  boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
+                }}
+              >
+                <div
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                  style={{
+                    background: 'linear-gradient(135deg, rgba(115,160,67,0.05), rgba(44,118,74,0.05))',
+                  }}
+                />
+                <div className="relative z-10">
+                  <div className="text-5xl mb-4">{feature.icon}</div>
+                  <h3 className="text-xl font-bold text-[var(--primary-dark)] mb-3">
+                    {feature.title}
+                  </h3>
+                  <p className="text-gray-600 leading-relaxed">
+                    {feature.desc}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-12 items-start mb-20">
+            <div
+              className="mission-card rounded-3xl p-10 backdrop-blur-xl"
+              style={{
+                background: 'linear-gradient(135deg, rgba(115,160,67,0.1), rgba(44,118,74,0.05))',
+                border: '1px solid rgba(115,160,67,0.2)',
+                boxShadow: '0 8px 32px rgba(0,0,0,0.08)',
+              }}
+            >
+              <div className="flex items-center gap-4 mb-6">
+                <div
+                  className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl"
+                  style={{
+                    background: 'linear-gradient(135deg, var(--accent), var(--primary))',
+                    boxShadow: '0 8px 20px rgba(115,160,67,0.3)',
+                  }}
+                >
+                  🎯
+                </div>
+                <h2 className="text-3xl font-black text-[var(--primary-dark)]">رسالتنا</h2>
+              </div>
+              <p className="text-lg text-[#355243] leading-relaxed">
+                أن نجعل الفحص الطبي أمرًا بسيطًا ومتاحًا للجميع، مع تجربة ودّية تبدأ من رسالة واتساب
+                وتنتهي بنتائج موثوقة بين يديك. نؤمن بأن الصحة حق للجميع ونسعى لتوفير خدمات طبية
+                عالية الجودة في راحة منزلك.
+              </p>
+            </div>
+
+            <div
+              className="partnership-card rounded-3xl p-10 backdrop-blur-xl"
+              style={{
+                background: 'linear-gradient(135deg, rgba(44,118,74,0.1), rgba(31,81,55,0.05))',
+                border: '1px solid rgba(44,118,74,0.2)',
+                boxShadow: '0 8px 32px rgba(0,0,0,0.08)',
+              }}
+            >
+              <div className="flex items-center gap-4 mb-6">
+                <div
+                  className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl"
+                  style={{
+                    background: 'linear-gradient(135deg, var(--primary), var(--primary-dark))',
+                    boxShadow: '0 8px 20px rgba(44,118,74,0.3)',
+                  }}
+                >
+                  🤝
+                </div>
+                <h2 className="text-3xl font-black text-[var(--primary-dark)]">شراكاتنا</h2>
+              </div>
+              <p className="text-lg text-[#355243] leading-relaxed">
+                نعمل بالتعاون مع أفضل المختبرات المرخّصة والمعتمدة في الأردن لضمان أعلى معايير
+                الجودة والدقة. شراكاتنا الاستراتيجية تضمن لك الحصول على نتائج موثوقة وخدمة
+                احترافية في كل مرة.
+              </p>
+            </div>
+          </div>
+
+          <div
+            className="values-section rounded-3xl p-12 text-center"
+            style={{
+              background: 'white',
+              border: '1px solid rgba(0,0,0,0.05)',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.08)',
+            }}
+          >
+            <h2 className="text-3xl font-black text-[var(--primary-dark)] mb-8">قيمنا ومبادئنا</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
+              {values.map((value, idx) => (
+                <div
+                  key={idx}
+                  className="value-item rounded-xl p-5 transition-all hover:scale-105 hover:shadow-lg"
+                  style={{
+                    background: 'linear-gradient(135deg, rgba(115,160,67,0.08), rgba(44,118,74,0.05))',
+                    border: '1px solid rgba(115,160,67,0.15)',
+                  }}
+                >
+                  <div className="flex items-center gap-3 justify-center">
+                    <div
+                      className="w-2 h-2 rounded-full"
+                      style={{ background: 'var(--accent)' }}
+                    />
+                    <span className="text-[var(--primary-dark)] font-bold">{value}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="text-center mt-16">
+            <h3 className="text-2xl font-bold text-[var(--primary-dark)] mb-6">تواصل معنا</h3>
+            <div className="flex justify-center gap-4">
+              {[
+                { href: 'https://wa.me/962779667168', icon: 'fa-whatsapp', bg: 'linear-gradient(135deg, #25D366, #20b858)', label: 'واتساب' },
+                { href: 'https://www.instagram.com/homoblood', icon: 'fa-instagram', bg: 'linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045)', label: 'إنستغرام' },
+                { href: 'https://www.facebook.com', icon: 'fa-facebook-f', bg: 'linear-gradient(135deg, #1877F2, #0d5bc6)', label: 'فيسبوك' },
+              ].map((social, idx) => (
+                <a
+                  key={idx}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-14 h-14 grid place-items-center rounded-xl text-white text-xl transition-all hover:translate-y-[-6px] hover:scale-110 no-underline"
+                  style={{
+                    background: social.bg,
+                    boxShadow: '0 8px 24px rgba(0,0,0,0.15)'
+                  }}
+                  aria-label={social.label}
+                >
+                  <i className={`fab ${social.icon}`} />
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+      </main>
+    </>
+  );
+}
+app/blog/page.tsx
+'use client';
+
+import { useState } from 'react';
+import { posts } from '@/lib/data/posts';
+import type { Post } from '@/lib/data/posts';
+import Image from 'next/image';
+import BlogPostModal from '@/components/BlogPostModal';
+
+export default function BlogPage() {
+  const [selectedPost, setSelectedPost] = useState<Post | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handlePostClick = (post: Post) => {
+    setSelectedPost(post);
+    setIsModalOpen(true);
+  };
+
+  return (
+    <>
+      <main className="section py-20" style={{ background: 'var(--muted)' }}>
+        <div className="container">
+          <div className="text-center mb-10">
+            <h1 className="text-4xl font-extrabold text-[var(--primary-dark)] mb-3">المدونة الطبية</h1>
+            <p className="text-lg text-[#466257] max-w-2xl mx-auto">
+              مقالات ونصائح طبية موثوقة لحياة صحية أفضل
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5.5">
+            {posts.map((post) => (
+              <article
+                key={post.id}
+                className="card cursor-pointer transition-all hover:scale-[1.02]"
+                onClick={() => handlePostClick(post)}
+              >
+                <div className="relative overflow-hidden group">
+                  <Image
+                    src={post.image}
+                    alt={post.title}
+                    width={400}
+                    height={250}
+                    className="w-full aspect-[16/10] object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="absolute top-3 right-3 bg-[var(--accent)] text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow-lg">
+                    {post.category}
+                  </div>
+                </div>
+
+                <div className="p-5">
+                  <div className="flex items-center gap-2 text-sm text-[#5f7b71] mb-3">
+                    <span>📅 {post.date}</span>
+                    {post.readTime && (
+                      <>
+                        <span>•</span>
+                        <span>⏱️ {post.readTime}</span>
+                      </>
+                    )}
+                  </div>
+
+                  <h2 className="text-xl font-extrabold text-[var(--primary-dark)] mb-3 leading-tight line-clamp-2">
+                    {post.title}
+                  </h2>
+
+                  <p className="text-[#466257] text-sm leading-relaxed mb-4 line-clamp-3">
+                    {post.excerpt}
+                  </p>
+
+                  {post.author && (
+                    <div className="flex items-center gap-2 text-xs text-[#5f7b71] mt-3 pt-3 border-t border-[#e7efe9]">
+                      <span>✍️</span>
+                      <span>{post.author}</span>
+                    </div>
+                  )}
+
+                  <div className="mt-4 inline-flex items-center gap-2 text-[var(--accent)] font-bold text-sm hover:gap-3 transition-all duration-200">
+                    اقرأ المقال كاملاً
+                    <span>←</span>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+
+          {posts.length === 0 && (
+            <div className="text-center py-20">
+              <div className="inline-flex items-center justify-center w-20 h-20 bg-white rounded-full shadow-lg mb-4">
+                <span className="text-4xl">📝</span>
+              </div>
+              <h3 className="text-2xl font-bold text-[var(--primary-dark)] mb-2">قريباً</h3>
+              <p className="text-[#5f7b71]">نعمل على إضافة مقالات طبية مفيدة لك</p>
+            </div>
+          )}
+        </div>
+      </main>
+
+      <BlogPostModal
+        post={selectedPost}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
+    </>
+  );
+}
+
+app/packages/page.tsx
+'use client';
+
+import { useState } from 'react';
+import { packages, searchPackages } from '@/lib/data/packages';
+import type { Package } from '@/lib/data/packages';
+import PackageCard from '@/components/PackageCard';
+import PackageModal from '@/components/PackageModal';
+
+export default function PackagesPage() {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filteredPackages, setFilteredPackages] = useState(packages);
+  const [selectedPackage, setSelectedPackage] = useState<Package | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    setFilteredPackages(searchPackages(query));
+  };
+
+  const handleDetailsClick = (pkg: Package) => {
+    setSelectedPackage(pkg);
+    setIsModalOpen(true);
+  };
+
+  const handleBookClick = (pkg: Package) => {
+    window.location.href = `/?package=${encodeURIComponent(pkg.title)}#book-panel`;
+  };
+
+  const handleModalBook = (packageTitle: string) => {
+    window.location.href = `/?package=${encodeURIComponent(packageTitle)}#book-panel`;
+  };
+
+  return (
+    <>
+      <main className="section packages py-18" style={{ background: 'var(--muted)' }}>
+        <div className="container">
+          <div className="flex items-center justify-between gap-4 flex-wrap mb-6">
+            <h1 className="text-4xl font-extrabold text-[var(--primary-dark)]">جميع الباقات</h1>
+            <label className="search bg-white rounded-full border border-[#e3eee6] px-3.5 py-2 flex gap-2.5 items-center min-w-[260px]">
+              <span className="text-[#5f7b71]">🔍</span>
+              <input
+                type="text"
+                placeholder="ابحث عن باقة…"
+                className="border-none outline-none bg-transparent w-full text-sm"
+                value={searchQuery}
+                onChange={(e) => handleSearch(e.target.value)}
+              />
+            </label>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5.5">
+            {filteredPackages.map((pkg) => (
+              <PackageCard
+                key={pkg.id}
+                package={pkg}
+                onDetailsClick={handleDetailsClick}
+                onBookClick={handleBookClick}
+              />
+            ))}
+          </div>
+
+          {filteredPackages.length === 0 && (
+            <div className="text-center py-12">
+              <p className="text-lg text-[#5f7b71]">لم يتم العثور على باقات مطابقة.</p>
+            </div>
+          )}
+        </div>
+      </main>
+
+      <PackageModal
+        package={selectedPackage}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onBook={handleModalBook}
+      />
+    </>
+  );
+}
+
+app/contact/page.tsx
+'use client';
+
+import { useState, FormEvent } from 'react';
+
+export default function ContactPage() {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    phone: '',
+    message: '',
+  });
+  const [alert, setAlert] = useState({ show: false, message: '', type: 'info' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    setAlert({ show: true, message: 'يتم الإرسال…', type: 'info' });
+
+    const { name, phone, subject, message } = formData;
+
+    if (name.trim().length < 3) {
+      setAlert({ show: true, message: 'الاسم مطلوب (3 أحرف على الأقل).', type: 'error' });
+      return;
+    }
+
+    if (!/^07[789]\d{7}$/.test(phone)) {
+      setAlert({
+        show: true,
+        message: 'رقم الهاتف يجب أن يبدأ بـ 077/078/079 وأن يكون 10 أرقام.',
+        type: 'error',
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const formspreeEndpoint =
+        process.env.NEXT_PUBLIC_FORMSPREE_ENDPOINT || 'https://formspree.io/f/xyzkvlbq';
+
+      const response = await fetch(formspreeEndpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        setAlert({ show: true, message: '✅ تم الإرسال بنجاح! سنتواصل معك قريبًا.', type: 'success' });
+        setFormData({ name: '', email: '', subject: '', phone: '', message: '' });
+      } else {
+        throw new Error('Failed to send');
+      }
+    } catch (error) {
+      console.error(error);
+      setAlert({ show: true, message: 'حدث خطأ أثناء الإرسال. يرجى المحاولة مرة أخرى.', type: 'error' });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const contactMethods = [
+    {
+      icon: '📱',
+      title: 'الهاتف',
+      value: '0779667168',
+      link: 'tel:+962779667168',
+      color: 'from-green-500 to-emerald-600'
+    },
+    {
+      icon: '📧',
+      title: 'البريد الإلكتروني',
+      value: 'contact@homoblood.online',
+      link: 'mailto:contact@homoblood.online',
+      color: 'from-blue-500 to-cyan-600'
+    },
+    {
+      icon: '📍',
+      title: 'الموقع',
+      value: 'الأردن - عمان',
+      link: '#',
+      color: 'from-purple-500 to-pink-600'
+    }
+  ];
+
+  const socialLinks = [
+    {
+      icon: 'fa-whatsapp',
+      label: 'واتساب',
+      href: 'https://wa.me/962779667168',
+      bg: 'linear-gradient(135deg, #25D366, #20b858)',
+      hoverBg: 'linear-gradient(135deg, #20b858, #1a9548)'
+    },
+    {
+      icon: 'fa-instagram',
+      label: 'إنستغرام',
+      href: 'https://www.instagram.com/homoblood',
+      bg: 'linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045)',
+      hoverBg: 'linear-gradient(135deg, #6b2d95, #d11919, #e09a38)'
+    },
+    {
+      icon: 'fa-facebook-f',
+      label: 'فيسبوك',
+      href: 'https://www.facebook.com',
+      bg: 'linear-gradient(135deg, #1877F2, #0d5bc6)',
+      hoverBg: 'linear-gradient(135deg, #0d5bc6, #0a4ba3)'
+    }
+  ];
+
+  return (
+    <>
+      <header
+        className="contact-hero relative text-white overflow-hidden"
+        style={{
+          background: 'linear-gradient(135deg, #1a4d2e 0%, #2d6a4f 50%, #40916c 100%)',
+        }}
+      >
+        <div
+          className="absolute inset-0 opacity-10"
+          style={{
+            backgroundImage: 'radial-gradient(circle at 20px 20px, rgba(255,255,255,0.15) 2px, transparent 0)',
+            backgroundSize: '40px 40px',
+          }}
+        />
+
+        <div
+          className="absolute top-20 right-20 w-64 h-64 rounded-full opacity-20 blur-3xl"
+          style={{
+            background: 'radial-gradient(circle, #73A043, transparent)',
+            animation: 'pulse 6s ease-in-out infinite',
+          }}
+        />
+
+        <div className="container relative z-10 py-20 text-center">
+          <h1
+            className="text-5xl md:text-6xl font-black mb-6"
+            style={{ animation: 'fadeInUp 0.8s ease-out' }}
+          >
+            تواصل معنا
+          </h1>
+          <p
+            className="text-xl md:text-2xl opacity-95 max-w-2xl mx-auto leading-relaxed"
+            style={{ animation: 'fadeInUp 0.8s ease-out 0.1s backwards' }}
+          >
+            نحن هنا للإجابة على استفساراتك ومساعدتك
+          </p>
+        </div>
+
+        <style jsx>{`
+          @keyframes pulse {
+            0%, 100% {
+              opacity: 0.2;
+              transform: scale(1);
+            }
+            50% {
+              opacity: 0.3;
+              transform: scale(1.1);
+            }
+          }
+          @keyframes fadeInUp {
+            from {
+              opacity: 0;
+              transform: translateY(30px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+        `}</style>
+      </header>
+
+      <main className="section py-20">
+        <div className="container">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+            {contactMethods.map((method, idx) => (
+              <a
+                key={idx}
+                href={method.link}
+                className="group relative overflow-hidden rounded-2xl p-8 text-center transition-all hover:shadow-2xl hover:-translate-y-2 no-underline"
+                style={{
+                  background: 'white',
+                  border: '1px solid rgba(0,0,0,0.05)',
+                  boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
+                }}
+              >
+                <div
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                  style={{
+                    background: 'linear-gradient(135deg, rgba(115,160,67,0.05), rgba(44,118,74,0.05))',
+                  }}
+                />
+                <div className="relative z-10">
+                  <div className="text-5xl mb-4">{method.icon}</div>
+                  <h3 className="text-lg font-bold text-[var(--primary-dark)] mb-2">
+                    {method.title}
+                  </h3>
+                  <p className="text-gray-600">{method.value}</p>
+                </div>
+              </a>
+            ))}
+          </div>
+
+          <div className="grid lg:grid-cols-2 gap-12">
+            <div
+              className="rounded-3xl p-10 backdrop-blur-xl"
+              style={{
+                background: 'white',
+                border: '1px solid rgba(0,0,0,0.05)',
+                boxShadow: '0 8px 32px rgba(0,0,0,0.08)',
+              }}
+            >
+              <div className="flex items-center gap-4 mb-6">
+                <div
+                  className="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl"
+                  style={{
+                    background: 'linear-gradient(135deg, var(--accent), var(--primary))',
+                    boxShadow: '0 8px 20px rgba(115,160,67,0.3)',
+                  }}
+                >
+                  ✉️
+                </div>
+                <h2 className="text-3xl font-black text-[var(--primary-dark)]">راسلنا</h2>
+              </div>
+
+              <p className="mb-6 text-gray-600 leading-relaxed">
+                أخبرنا بما تريد: حجز، استفسار، شكوى، اقتراح، أو تعاون. سنرد عليك في أقرب وقت.
+              </p>
+
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-bold text-[var(--primary-dark)] mb-2">
+                    الاسم الكامل *
+                  </label>
+                  <input
+                    className="input"
+                    name="name"
+                    placeholder="أدخل اسمك الكامل"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-bold text-[var(--primary-dark)] mb-2">
+                    البريد الإلكتروني (اختياري)
+                  </label>
+                  <input
+                    className="input"
+                    name="email"
+                    type="email"
+                    placeholder="example@email.com"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-bold text-[var(--primary-dark)] mb-2">
+                    رقم الهاتف *
+                  </label>
+                  <input
+                    className="input"
+                    name="phone"
+                    placeholder="077/078/079 (10 أرقام)"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-bold text-[var(--primary-dark)] mb-2">
+                    الموضوع *
+                  </label>
+                  <input
+                    className="input"
+                    name="subject"
+                    placeholder="حجز باقة / استفسار / شكوى / اقتراح"
+                    value={formData.subject}
+                    onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-bold text-[var(--primary-dark)] mb-2">
+                    رسالتك *
+                  </label>
+                  <textarea
+                    className="input min-h-[120px]"
+                    name="message"
+                    placeholder="اكتب رسالتك هنا..."
+                    value={formData.message}
+                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                    required
+                  />
+                </div>
+
+                <div
+                  className="rounded-xl p-4 text-sm"
+                  style={{
+                    background: 'rgba(115,160,67,0.08)',
+                    border: '1px solid rgba(115,160,67,0.2)',
+                    color: 'var(--primary-dark)',
+                  }}
+                >
+                  🔒 نحترم خصوصيتك ولن نشارك بياناتك مع أي طرف ثالث
+                </div>
+
+                {alert.show && (
+                  <div
+                    className="rounded-xl p-4"
+                    style={{
+                      background: alert.type === 'success' ? 'rgba(34,197,94,0.1)' : alert.type === 'error' ? 'rgba(239,68,68,0.1)' : 'rgba(59,130,246,0.1)',
+                      border: alert.type === 'success' ? '1px solid rgba(34,197,94,0.3)' : alert.type === 'error' ? '1px solid rgba(239,68,68,0.3)' : '1px solid rgba(59,130,246,0.3)',
+                      color: alert.type === 'success' ? '#15803d' : alert.type === 'error' ? '#991b1b' : '#1e40af',
+                    }}
+                  >
+                    {alert.message}
+                  </div>
+                )}
+
+                <button
+                  type="submit"
+                  className="btn w-full text-lg py-4 transition-all hover:scale-105"
+                  disabled={isSubmitting}
+                  style={{
+                    background: isSubmitting ? '#94a3b8' : 'linear-gradient(135deg, var(--accent), var(--primary))',
+                  }}
+                >
+                  {isSubmitting ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <i className="fas fa-spinner fa-spin" />
+                      جارٍ الإرسال...
+                    </span>
+                  ) : (
+                    <span className="flex items-center justify-center gap-2">
+                      <i className="fas fa-paper-plane" />
+                      إرسال الرسالة
+                    </span>
+                  )}
+                </button>
+              </form>
+            </div>
+
+            <div className="space-y-8">
+              <div
+                className="rounded-3xl p-10 backdrop-blur-xl"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(115,160,67,0.1), rgba(44,118,74,0.05))',
+                  border: '1px solid rgba(115,160,67,0.2)',
+                  boxShadow: '0 8px 32px rgba(0,0,0,0.08)',
+                }}
+              >
+                <div className="flex items-center gap-4 mb-6">
+                  <div
+                    className="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl"
+                    style={{
+                      background: 'linear-gradient(135deg, var(--primary), var(--primary-dark))',
+                      boxShadow: '0 8px 20px rgba(44,118,74,0.3)',
+                    }}
+                  >
+                    ⏰
+                  </div>
+                  <h3 className="text-2xl font-black text-[var(--primary-dark)]">ساعات العمل</h3>
+                </div>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between p-4 rounded-xl bg-white/50">
+                    <span className="font-bold text-[var(--primary-dark)]">السبت - الخميس</span>
+                    <span className="text-gray-600">8 صباحاً - 10 مساءً</span>
+                  </div>
+                  <div className="flex items-center justify-between p-4 rounded-xl bg-white/50">
+                    <span className="font-bold text-[var(--primary-dark)]">الجمعة</span>
+                    <span className="text-gray-600">9 صباحاً - 9 مساءً</span>
+                  </div>
+                  <p className="text-sm text-gray-600 mt-4">
+                    💡 المواعيد الخاصة متاحة بالتنسيق المسبق
+                  </p>
+                </div>
+              </div>
+
+              <div
+                className="rounded-3xl p-10 backdrop-blur-xl text-center"
+                style={{
+                  background: 'white',
+                  border: '1px solid rgba(0,0,0,0.05)',
+                  boxShadow: '0 8px 32px rgba(0,0,0,0.08)',
+                }}
+              >
+                <h3 className="text-2xl font-black text-[var(--primary-dark)] mb-4">تابعنا على</h3>
+                <p className="text-gray-600 mb-6">للحصول على آخر التحديثات والعروض</p>
+                <div className="flex justify-center gap-4">
+                  {socialLinks.map((social, idx) => (
+                    <a
+                      key={idx}
+                      href={social.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-14 h-14 grid place-items-center rounded-xl text-white text-xl transition-all hover:translate-y-[-6px] hover:scale-110 no-underline"
+                      style={{
+                        background: social.bg,
+                        boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
+                      }}
+                      aria-label={social.label}
+                    >
+                      <i className={`fab ${social.icon}`} />
+                    </a>
+                  ))}
+                </div>
+              </div>
+
+              <div
+                className="rounded-3xl p-8 backdrop-blur-xl text-center"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(44,118,74,0.1), rgba(31,81,55,0.05))',
+                  border: '1px solid rgba(44,118,74,0.2)',
+                }}
+              >
+                <div className="text-4xl mb-3">💬</div>
+                <h4 className="text-xl font-bold text-[var(--primary-dark)] mb-2">تواصل سريع؟</h4>
+                <p className="text-gray-600 mb-4 text-sm">راسلنا مباشرة على واتساب للرد الفوري</p>
+                <a
+                  href="https://wa.me/962779667168"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn w-full"
+                  style={{
+                    background: 'linear-gradient(135deg, #25D366, #20b858)',
+                  }}
+                >
+                  <i className="fab fa-whatsapp ml-2" />
+                  فتح واتساب
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </>
+  );
+}
+app/globals.css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #2C764A;
+  --primary-dark: #1F5137;
+  --accent: #73A043;
+  --muted: #eef5f0;
+  --ink: #0F172A;
+  --card: #ffffff;
+  --radius: 20px;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: var(--font-cairo), 'Cairo', system-ui, -apple-system, 'Segoe UI', Roboto, Ubuntu, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+    color: var(--ink);
+    background: #fbfdfb;
+    line-height: 1.7;
+    direction: rtl;
+    padding-top: 64px;
+  }
+
+  a {
+    color: var(--primary-dark);
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+}
+
+@layer components {
+  .container {
+    width: min(1100px, 92vw);
+    margin: 0 auto;
+  }
+
+  .section {
+    position: relative;
+    padding: 80px 0;
+    transition: all 0.3s ease;
+  }
+
+  .section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(115, 160, 67, 0.2), transparent);
+  }
+
+  .section:first-of-type::before {
+    display: none;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 48px;
+    padding: 0 20px;
+    border-radius: 999px;
+    border: none;
+    background: var(--primary-dark);
+    color: #fff;
+    font-weight: 700;
+    box-shadow: 0 8px 20px rgba(31, 81, 55, 0.15);
+    transition: 0.25s ease;
+    cursor: pointer;
+  }
+
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(31, 81, 55, 0.25);
+    text-decoration: none;
+  }
+
+  .btn:active {
+    transform: translateY(0);
+  }
+
+  .btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .btn.outline {
+    background: #fff;
+    color: var(--primary-dark);
+    border: 2px solid var(--primary-dark);
+  }
+
+  .card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+  }
+
+  .glass {
+    background: rgba(255, 255, 255, 0.55) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.5) !important;
+  }
+
+  .input, textarea, select {
+    width: 100%;
+    border-radius: 14px;
+    border: 1px solid #dfe9e3;
+    background: #fff;
+    padding: 12px 14px;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .input::placeholder, textarea::placeholder, select::placeholder {
+    color: #94a3b8;
+    opacity: 1;
+  }
+
+  .input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(115, 160, 67, 0.1);
+  }
+
+  select option {
+    color: var(--ink);
+    background: #fff;
+    padding: 8px;
+  }
+
+  textarea {
+    min-height: 140px;
+    resize: vertical;
+  }
+
+  .alert {
+    background: #fff7ea;
+    border: 1px solid #fde3b1;
+    color: #7a4b00;
+    padding: 10px 12px;
+    border-radius: 12px;
+  }
+
+  .alert.success {
+    background: #ebfff5;
+    border: 1px solid #b4f3d3;
+    color: #0f5a38;
+  }
+
+  .badge {
+    background: var(--muted);
+    color: var(--primary-dark);
+    font-weight: 700;
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  @keyframes floatY {
+    0%, 100% {
+      transform: translateY(0) translateX(0) scale(1);
+    }
+    50% {
+      transform: translateY(-24px) translateX(10px) scale(1.04);
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateX(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+app/layout.tsx
+import type { Metadata } from 'next';
+import { Cairo } from 'next/font/google';
+import './globals.css';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
+
+const cairo = Cairo({
+  subsets: ['arabic'],
+  weight: ['400', '600', '700', '800', '900'],
+  variable: '--font-cairo',
+  display: 'swap',
+});
+
+export const metadata: Metadata = {
+  title: 'عالم الصحة — المختبر لعندك',
+  description: 'مبادرة أردنية لتقديم خدمات المختبر إلى باب بيتك — بدقة، خصوصية، وثقة.',
+  keywords: 'مختبر منزلي، فحوصات طبية، الأردن، عمان، سحب دم منزلي',
+  icons: {
+    icon: '/assets/images/logo.png',
+    apple: '/assets/images/logo.png',
+  },
+  openGraph: {
+    title: 'عالم الصحة — المختبر لعندك',
+    description: 'مبادرة أردنية لتقديم خدمات المختبر إلى باب بيتك',
+    locale: 'ar_AR',
+    type: 'website',
+    images: ['/assets/images/logo.png'],
+  },
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="ar" dir="rtl">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+        <link rel="dns-prefetch" href="https://www.gstatic.com" />
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+          crossOrigin="anonymous"
+        />
+      </head>
+      <body className={cairo.variable}>
+        <Navbar />
+        {children}
+        <Footer />
+      </body>
+    </html>
+  );
+}
+APP/page.tsx
+import { Metadata } from 'next';
+import Hero from '@/components/Hero';
+import PackagesSection from '@/components/PackagesSection';
+import TestimonialsSection from '@/components/TestimonialsSection';
+
+export const metadata: Metadata = {
+  title: 'عالم الصحة — المختبر لعندك',
+  description: 'مبادرة أردنية لتقديم خدمات المختبر إلى باب بيتك — بدقة، خصوصية، وثقة.',
+};
+
+export default function HomePage() {
+  return (
+    <main>
+      <Hero />
+      <PackagesSection />
+      <TestimonialsSection />
+    </main>
+  );
+}
+app/sitemap.ts
+import { MetadataRoute } from 'next';
+
+export default function sitemap(): MetadataRoute.Sitemap {
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://yourdomain.com';
+
+  return [
+    {
+      url: baseUrl,
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 1,
+    },
+    {
+      url: `${baseUrl}/packages`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/blog`,
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/media`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/about`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/contact`,
+      lastModified: new Date(),
+      changeFrequency: 'yearly',
+      priority: 0.6,
+    },
+  ];
+}
+components/BlogPostModal.tsx
+'use client';
+
+import { useEffect } from 'react';
+import Image from 'next/image';
+import type { Post } from '@/lib/data/posts';
+
+interface BlogPostModalProps {
+  post: Post | null;
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export default function BlogPostModal({ post, isOpen, onClose }: BlogPostModalProps) {
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    if (isOpen) {
+      window.addEventListener('keydown', handleEscape);
+      return () => window.removeEventListener('keydown', handleEscape);
+    }
+  }, [isOpen, onClose]);
+
+  if (!isOpen || !post) return null;
+
+  const shareUrl = typeof window !== 'undefined' ? window.location.origin + '/blog/' + post.slug : '';
+  const shareText = encodeURIComponent(post.title);
+
+  const facebookShare = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
+  const instagramShare = `https://www.instagram.com/`;
+
+  return (
+    <div
+      className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-fadeIn"
+      onClick={onClose}
+    >
+      <div
+        className="relative w-full max-w-5xl max-h-[95vh] bg-white rounded-3xl shadow-2xl overflow-hidden animate-slideUp"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          onClick={onClose}
+          className="absolute top-6 left-6 z-20 w-12 h-12 flex items-center justify-center bg-white/95 hover:bg-white rounded-full shadow-xl transition-all hover:scale-110 hover:rotate-90"
+          aria-label="إغلاق"
+        >
+          <span className="text-3xl text-[var(--primary-dark)] font-light">×</span>
+        </button>
+
+        <div className="overflow-y-auto max-h-[95vh] custom-scrollbar">
+          <div className="relative h-[50vh] md:h-[60vh] overflow-hidden">
+            <Image
+              src={post.image}
+              alt={post.title}
+              fill
+              className="object-cover"
+              priority
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+
+            <div className="absolute top-6 right-6 flex gap-2">
+              <span className="px-4 py-2 bg-[var(--accent)] text-white text-sm font-bold rounded-full shadow-lg">
+                {post.category}
+              </span>
+            </div>
+
+            <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12">
+              <h1 className="text-3xl md:text-5xl font-extrabold text-white mb-4 leading-tight">
+                {post.title}
+              </h1>
+              <div className="flex flex-wrap items-center gap-4 text-white/90 text-sm md:text-base">
+                {post.author && (
+                  <div className="flex items-center gap-2">
+                    <span className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+                      ✍️
+                    </span>
+                    <span className="font-semibold">{post.author}</span>
+                  </div>
+                )}
+                <span className="w-1 h-1 bg-white/60 rounded-full"></span>
+                <div className="flex items-center gap-2">
+                  <span>📅</span>
+                  <span>{new Date(post.date).toLocaleDateString('ar-SA', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                </div>
+                {post.readTime && (
+                  <>
+                    <span className="w-1 h-1 bg-white/60 rounded-full"></span>
+                    <div className="flex items-center gap-2">
+                      <span>⏱️</span>
+                      <span>{post.readTime}</span>
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="px-6 md:px-12 py-8 md:py-12">
+            <div className="max-w-3xl mx-auto">
+              <div className="mb-8 p-6 bg-gradient-to-br from-[var(--muted)] to-white rounded-2xl border-r-4 border-[var(--accent)]">
+                <p className="text-lg md:text-xl text-[var(--primary-dark)] font-semibold leading-relaxed">
+                  {post.excerpt}
+                </p>
+              </div>
+
+              <article className="prose prose-lg max-w-none">
+                <div className="text-[var(--primary-dark)] leading-relaxed space-y-6">
+                  {post.content.split('\n').map((paragraph, idx) => {
+                    if (paragraph.trim() === '') return null;
+
+                    if (paragraph.trim().startsWith('-')) {
+                      return (
+                        <div key={idx} className="flex items-start gap-3 py-2">
+                          <span className="flex-shrink-0 w-2 h-2 bg-[var(--accent)] rounded-full mt-2"></span>
+                          <p className="text-base md:text-lg m-0">{paragraph.trim().substring(1).trim()}</p>
+                        </div>
+                      );
+                    }
+
+                    return (
+                      <p key={idx} className="text-base md:text-lg leading-relaxed">
+                        {paragraph.trim()}
+                      </p>
+                    );
+                  })}
+                </div>
+              </article>
+
+              <div className="mt-12 pt-8 border-t-2 border-[var(--muted)]">
+                <h3 className="text-xl md:text-2xl font-extrabold text-[var(--primary-dark)] mb-6">
+                  شارك هذا المقال
+                </h3>
+                <div className="flex flex-wrap gap-4">
+                  <a
+                    href={facebookShare}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-3 px-6 py-3 bg-[#1877f2] text-white rounded-xl hover:shadow-xl transition-all hover:scale-105 font-semibold"
+                  >
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                    </svg>
+                    <span>Facebook</span>
+                  </a>
+
+                  <a
+                    href={instagramShare}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-3 px-6 py-3 bg-gradient-to-br from-[#833ab4] via-[#fd1d1d] to-[#fcb045] text-white rounded-xl hover:shadow-xl transition-all hover:scale-105 font-semibold"
+                  >
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                    </svg>
+                    <span>Instagram</span>
+                  </a>
+
+                  <button
+                    onClick={() => {
+                      if (navigator.share) {
+                        navigator.share({
+                          title: post.title,
+                          text: post.excerpt,
+                          url: shareUrl,
+                        });
+                      } else {
+                        navigator.clipboard.writeText(shareUrl);
+                        alert('تم نسخ رابط المقال!');
+                      }
+                    }}
+                    className="flex items-center gap-3 px-6 py-3 bg-[var(--primary-dark)] text-white rounded-xl hover:shadow-xl transition-all hover:scale-105 font-semibold"
+                  >
+                    <span>🔗</span>
+                    <span>نسخ الرابط</span>
+                  </button>
+                </div>
+              </div>
+
+              {post.author && (
+                <div className="mt-8 p-6 bg-gradient-to-br from-[var(--muted)] to-white rounded-2xl">
+                  <div className="flex items-start gap-4">
+                    <div className="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-[var(--accent)] to-[var(--primary-dark)] rounded-full flex items-center justify-center text-2xl text-white shadow-lg">
+                      ✍️
+                    </div>
+                    <div>
+                      <h4 className="text-lg font-extrabold text-[var(--primary-dark)] mb-1">
+                        {post.author}
+                      </h4>
+                      <p className="text-sm text-[#5f7b71]">
+                        كاتب ومتخصص في المجال الطبي
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <style jsx>{`
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+
+        @keyframes slideUp {
+          from {
+            opacity: 0;
+            transform: translateY(40px) scale(0.96);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+
+        .animate-fadeIn {
+          animation: fadeIn 0.25s ease-out;
+        }
+
+        .animate-slideUp {
+          animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 10px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: #f8faf9;
+          border-radius: 10px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: linear-gradient(180deg, var(--accent), var(--primary-dark));
+          border-radius: 10px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: var(--primary-dark);
+        }
+      `}</style>
+    </div>
+  );
+}
+
+components/BookPanel.tsx
+'use client';
+
+import { useState, FormEvent, useEffect } from 'react';
+import Image from 'next/image';
+import { createBooking, type BookingData } from '@/lib/firebase/bookings';
+
+const AMMAN_AREAS = {
+  'غرب عمّان': [
+    'عبدون',
+    'دابوق',
+    'خلدا',
+    'تلاع العلي',
+    'الرابية',
+    'الصويفية',
+    'أم أذينة',
+    'أم السماق',
+    'دير غبار',
+    'مرج الحمام',
+    'ناعور',
+  ],
+  'شمال عمّان': ['الجبيهة', 'صويلح', 'أبو نصير', 'ضاحية الرشيد', 'شفا بدران'],
+  'وسط عمّان': ['وسط البلد', 'جبل عمّان', 'جبل اللويبدة', 'العبدلي'],
+  'شرق عمّان': ['ماركا', 'النزهة', 'الأشرفية', 'القويسمة'],
+  'جنوب عمّان': ['المقابلين', 'خريبة السوق', 'سحاب'],
+};
+
+export default function BookPanel() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
+    location: '',
+    package: '',
+  });
+  const [alert, setAlert] = useState({ show: false, message: '', type: 'info' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const packageParam = urlParams.get('package');
+
+      if (packageParam) {
+        setFormData(prev => ({ ...prev, package: packageParam }));
+        setIsOpen(true);
+
+        setTimeout(() => {
+          const bookPanel = document.getElementById('book-panel');
+          if (bookPanel) {
+            bookPanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        }, 100);
+      }
+    }
+  }, []);
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    setAlert({ show: true, message: 'يتم الإرسال…', type: 'info' });
+
+    const { name, phone, location } = formData;
+
+    if (name.trim().length < 3) {
+      setAlert({
+        show: true,
+        message: 'الاسم مطلوب (3 أحرف على الأقل).',
+        type: 'error',
+      });
+      return;
+    }
+
+    if (!/^07[789]\d{7}$/.test(phone)) {
+      setAlert({
+        show: true,
+        message: 'رقم الهاتف يجب أن يبدأ بـ 077/078/079 وأن يكون 10 أرقام.',
+        type: 'error',
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const bookingData: BookingData = {
+        name: name.trim(),
+        phone: phone.trim(),
+        address: location.trim(),
+        packageName: formData.package.trim() || 'غير محدد',
+        date: new Date().toISOString().split('T')[0],
+        time: new Date().toLocaleTimeString('ar-JO'),
+        notes: '',
+      };
+
+      const result = await createBooking(bookingData);
+
+      if (result.success) {
+        setAlert({
+          show: true,
+          message: '✅ تم الإرسال بنجاح! سنتواصل معك قريبًا.',
+          type: 'success',
+        });
+
+        setFormData({ name: '', phone: '', location: '', package: '' });
+
+        const msg = `طلب حجز:\nالاسم: ${name}\nالهاتف: ${phone}\nالمنطقة: ${location || '-'}\nالبكج: ${formData.package || '-'}`;
+        window.open(
+          `https://wa.me/962779667168?text=${encodeURIComponent(msg)}`,
+          '_blank'
+        );
+      } else {
+        throw new Error(result.error || 'حدث خطأ');
+      }
+    } catch (error) {
+      console.error(error);
+      setAlert({
+        show: true,
+        message: 'حدث خطأ أثناء الإرسال.',
+        type: 'error',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <div
+      id="book-panel"
+      className="relative max-w-[820px] mx-auto px-4 grid gap-3.5 justify-center items-start py-4"
+    >
+      <div
+        className="bp-inner w-full max-w-[680px] rounded-2xl px-5 py-4 flex gap-3.5 items-center justify-between shadow-lg backdrop-blur-md"
+        style={{
+          background: 'rgba(255,255,255,0.85)',
+          border: '1px solid rgba(255,255,255,0.6)',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.08)',
+        }}
+      >
+        <div className="bp-badge inline-flex items-center gap-2 bg-[var(--muted)] border border-[rgba(0,0,0,0.06)] rounded-full px-3 py-2 font-extrabold text-[var(--primary-dark)] shadow-md">
+          <Image
+            src="/assets/images/logo.png"
+            alt=""
+            width={28}
+            height={28}
+            className="block"
+          />
+          <span>سحب منزلي</span>
+        </div>
+
+        <div className="bp-copy flex flex-col gap-0.5 min-w-0 hidden sm:flex">
+          <strong className="font-black text-[#17392d]">مختبرك لعندك</strong>
+          <span className="text-[#486358] text-[13px]">
+            موعد سريع • أدوات معقمة
+          </span>
+        </div>
+
+        <button
+          className="btn transition-all duration-200 hover:scale-105 cursor-pointer"
+          onClick={() => setIsOpen(!isOpen)}
+          type="button"
+          style={{
+            background: isOpen ? 'var(--primary-dark)' : 'var(--accent)',
+            boxShadow: '0 4px 16px rgba(115,160,67,.35)',
+          }}
+        >
+          {isOpen ? 'إغلاق' : 'احجز الآن'}
+        </button>
+      </div>
+
+      <form
+        onSubmit={handleSubmit}
+        className={`book-form w-full max-w-[680px] rounded-2xl p-6 transition-all duration-400 backdrop-blur-md ${
+          isOpen
+            ? 'opacity-100 translate-y-0 scale-100 mt-4 h-auto overflow-visible'
+            : 'opacity-0 translate-y-[-10px] scale-95 h-0 overflow-hidden mt-0'
+        }`}
+        style={{
+          background: 'rgba(255,255,255,0.95)',
+          border: '1px solid rgba(0,0,0,0.08)',
+          boxShadow: isOpen ? '0 12px 40px rgba(0,0,0,0.1)' : 'none',
+          pointerEvents: isOpen ? 'auto' : 'none',
+        }}
+      >
+        <div className="grid md:grid-cols-2 gap-4">
+          <input
+            className="input"
+            name="name"
+            placeholder="الاسم الكامل *"
+            value={formData.name}
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            required
+          />
+          <input
+            className="input"
+            name="phone"
+            placeholder="رقم الهاتف (077/078/079) *"
+            value={formData.phone}
+            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+            required
+          />
+        </div>
+        <div className="grid md:grid-cols-2 gap-4 mt-4">
+          <select
+            className="input"
+            name="location"
+            value={formData.location}
+            onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+            required
+          >
+            <option value="">اختر المنطقة…</option>
+            {Object.entries(AMMAN_AREAS).map(([group, areas]) => (
+              <optgroup key={group} label={group}>
+                {areas.map((area) => (
+                  <option key={area} value={area}>
+                    {area}
+                  </option>
+                ))}
+              </optgroup>
+            ))}
+            <option value="أخرى">أخرى</option>
+          </select>
+          <select
+            className="input"
+            name="package"
+            value={formData.package}
+            onChange={(e) => setFormData({ ...formData, package: e.target.value })}
+          >
+            <option value="">اختر البكج (اختياري)</option>
+<option>باقة هشاشة العظام</option>
+<option>باقة مرضى القلب والضغط</option>
+<option>باقة متابعة السكري</option>
+<option>باقة الرشاقة والدايت</option>
+<option>باقة اضطرابات الدورة (للنساء)</option>
+<option>باقة متابعة الحمل</option>
+<option>باقة الفحص الشامل (CheckUp)</option>
+<option>باقة صحة الرجال</option>
+<option>باقة الفيتامينات والمعادن</option>
+
+          </select>
+        </div>
+
+        {alert.show && (
+          <div
+            className={`alert mt-4 ${alert.type === 'success' ? 'success' : ''}`}
+          >
+            {alert.message}
+          </div>
+        )}
+
+        <div className="flex justify-center mt-4">
+          <button
+            type="submit"
+            className="btn transition-all duration-200 hover:scale-105 cursor-pointer min-w-[200px]"
+            disabled={isSubmitting}
+            style={{
+              background: isSubmitting ? '#94a3b8' : 'var(--accent)',
+              boxShadow: '0 8px 24px rgba(115,160,67,.4)',
+              cursor: isSubmitting ? 'not-allowed' : 'pointer',
+            }}
+          >
+            {isSubmitting ? 'جارٍ الإرسال…' : 'احجز الآن'}
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+}
+
+components/Footer.tsx
+'use client';
+
+import Link from 'next/link';
+import Image from 'next/image';
+
+export default function Footer() {
+  return (
+    <footer
+      className="footer relative overflow-hidden"
+      style={{
+        background: 'linear-gradient(135deg, #1a3d2e 0%, #0d2619 50%, #081810 100%)',
+        color: '#e0f2e7',
+        fontSize: '15px',
+        lineHeight: '1.8',
+      }}
+    >
+      <div
+        className="absolute inset-0 opacity-5 pointer-events-none"
+        style={{
+          backgroundImage: 'radial-gradient(circle at 20px 20px, rgba(255,255,255,0.1) 2px, transparent 0)',
+          backgroundSize: '40px 40px',
+        }}
+      />
+
+      <div
+        className="absolute top-0 left-0 right-0 h-px"
+        style={{
+          background: 'linear-gradient(90deg, transparent, rgba(115, 160, 67, 0.3), transparent)',
+        }}
+      />
+
+      <div className="container relative z-10 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+          <div className="lg:col-span-2">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="relative w-14 h-14">
+                <Image
+                  src="/assets/images/logo.png"
+                  alt="شعار عالم الصحة"
+                  width={56}
+                  height={56}
+                  className="rounded-full shadow-lg"
+                  style={{ objectFit: 'contain' }}
+                />
+              </div>
+              <h3 className="text-white text-2xl font-extrabold m-0">عالم الصحة</h3>
+            </div>
+            <p className="mb-5 text-[#c5e5d0] leading-relaxed max-w-md">
+              مبادرة أردنية رائدة في تقديم خدمات المختبر الطبي المنزلي بدقة عالية وخصوصية تامة.
+              نعمل مع أفضل المختبرات المعتمدة لضمان أفضل النتائج.
+            </p>
+            <div className="flex gap-3 mt-5">
+              <a
+                href="https://wa.me/962779667168"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-12 h-12 grid place-items-center rounded-xl text-white text-lg transition-all hover:translate-y-[-4px] hover:scale-110 no-underline"
+                style={{
+                  background: 'linear-gradient(135deg, #25D366, #20b858)',
+                  boxShadow: '0 8px 20px rgba(37, 211, 102, 0.3)',
+                }}
+                aria-label="واتساب"
+              >
+                <i className="fab fa-whatsapp" />
+              </a>
+              <a
+                href="https://www.instagram.com/homoblood"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-12 h-12 grid place-items-center rounded-xl text-white text-lg transition-all hover:translate-y-[-4px] hover:scale-110 no-underline"
+                style={{
+                  background:
+                    'linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045)',
+                  boxShadow: '0 8px 20px rgba(131, 58, 180, 0.3)',
+                }}
+                aria-label="إنستغرام"
+              >
+                <i className="fab fa-instagram" />
+              </a>
+              <a
+                href="https://www.facebook.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-12 h-12 grid place-items-center rounded-xl text-white text-lg transition-all hover:translate-y-[-4px] hover:scale-110 no-underline"
+                style={{
+                  background: 'linear-gradient(135deg, #1877F2, #0d5bc6)',
+                  boxShadow: '0 8px 20px rgba(24, 119, 242, 0.3)',
+                }}
+                aria-label="فيسبوك"
+              >
+                <i className="fab fa-facebook-f" />
+              </a>
+            </div>
+          </div>
+
+          <div>
+            <h4 className="text-white text-lg mb-4 font-extrabold flex items-center gap-2">
+              <span className="w-1 h-6 bg-[var(--accent)] rounded-full"></span>
+              روابط سريعة
+            </h4>
+            <ul className="list-none p-0 m-0 space-y-3">
+              {[
+                { href: '/', label: 'الرئيسية' },
+                { href: '/packages', label: 'الباقات' },
+                { href: '/blog', label: 'المدونة' },
+                { href: '/about', label: 'من نحن' },
+                { href: '/contact', label: 'تواصل معنا' },
+              ].map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="transition-all hover:text-white hover:translate-x-[-4px] inline-flex items-center gap-2 no-underline group"
+                  >
+                    <span className="text-[var(--accent)] opacity-0 group-hover:opacity-100 transition-opacity">←</span>
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="text-white text-lg mb-4 font-extrabold flex items-center gap-2">
+              <span className="w-1 h-6 bg-[var(--accent)] rounded-full"></span>
+              تواصل معنا
+            </h4>
+            <ul className="list-none p-0 m-0 space-y-3">
+              <li>
+                <a
+                  href="tel:+962779667168"
+                  className="transition-all hover:text-white no-underline flex items-center gap-3 group"
+                >
+                  <span className="w-9 h-9 rounded-lg bg-[rgba(115,160,67,0.15)] flex items-center justify-center group-hover:bg-[var(--accent)] transition-all">
+                    <i className="fas fa-phone text-[var(--accent)] group-hover:text-white transition-colors" />
+                  </span>
+                  <span>0779667168</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  href="mailto:contact@homoblood.online"
+                  className="transition-all hover:text-white no-underline flex items-center gap-3 group"
+                >
+                  <span className="w-9 h-9 rounded-lg bg-[rgba(115,160,67,0.15)] flex items-center justify-center group-hover:bg-[var(--accent)] transition-all">
+                    <i className="fas fa-envelope text-[var(--accent)] group-hover:text-white transition-colors" />
+                  </span>
+                  <span className="break-all">contact@homoblood.online</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.instagram.com/homoblood"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="transition-all hover:text-white no-underline flex items-center gap-3 group"
+                >
+                  <span className="w-9 h-9 rounded-lg bg-[rgba(115,160,67,0.15)] flex items-center justify-center group-hover:bg-[var(--accent)] transition-all">
+                    <i className="fab fa-instagram text-[var(--accent)] group-hover:text-white transition-colors" />
+                  </span>
+                  <span>homoblood@</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div
+          className="border-t pt-6 text-center"
+          style={{
+            borderColor: 'rgba(115, 160, 67, 0.2)',
+          }}
+        >
+          <p className="m-0 text-[#b5d8c0]">
+            © {new Date().getFullYear()} عالم الصحة. جميع الحقوق محفوظة.
+          </p>
+          <p className="m-0 mt-2 text-sm text-[#8fb99a]">
+            مختبر طبي منزلي معتمد في الأردن
+          </p>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+components/Hero.tsx
+'use client';
+
+import Link from 'next/link';
+import BookPanel from './BookPanel';
+
+export default function Hero() {
+  return (
+    <header
+      className="hero relative text-white py-35 pb-30 overflow-hidden"
+      style={{
+        background:
+          'radial-gradient(1200px 600px at 80% 20%, rgba(255,255,255,.12), transparent 60%), linear-gradient(135deg, #255339, #3a5e44)',
+        isolation: 'isolate',
+      }}
+    >
+      <div
+        className="hero-decor absolute inset-0 z-[1] pointer-events-none"
+        aria-hidden="true"
+      >
+        <div
+          className="blob absolute filter blur-[22px] rounded-full opacity-42"
+          style={{
+            width: '360px',
+            height: '360px',
+            left: '-6%',
+            top: '-8%',
+            background: 'color-mix(in srgb, #73A043 80%, #fff 20%)',
+            animation: 'floatY 12s ease-in-out infinite, pulse 8s ease-in-out infinite',
+            mixBlendMode: 'screen',
+          }}
+        />
+        <div
+          className="blob absolute filter blur-[22px] rounded-full opacity-42"
+          style={{
+            width: '420px',
+            height: '420px',
+            right: '-8%',
+            top: '10%',
+            background: 'color-mix(in srgb, #2C764A 85%, #5bd38a 15%)',
+            animation: 'floatY 10s ease-in-out infinite, pulse 6s ease-in-out infinite',
+            animationDelay: '-2s',
+            mixBlendMode: 'screen',
+          }}
+        />
+        <div
+          className="blob absolute filter blur-[22px] rounded-full opacity-42"
+          style={{
+            width: '280px',
+            height: '280px',
+            left: '20%',
+            bottom: '-10%',
+            background: 'color-mix(in srgb, #1F5137 80%, #a6f0c1 20%)',
+            animation: 'floatY 11s ease-in-out infinite, pulse 7s ease-in-out infinite',
+            animationDelay: '-1s',
+            mixBlendMode: 'screen',
+          }}
+        />
+
+        <svg
+          className="dot-grid absolute inset-0 opacity-25"
+          width="100%"
+          height="100%"
+          preserveAspectRatio="none"
+          style={{ animation: 'fadeInDots 2s ease-out' }}
+        >
+          <defs>
+            <pattern
+              id="pDots"
+              x="0"
+              y="0"
+              width="30"
+              height="30"
+              patternUnits="userSpaceOnUse"
+            >
+              <circle cx="1.5" cy="1.5" r="1.5" fill="rgba(255,255,255,0.18)" />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#pDots)" />
+        </svg>
+
+        <svg
+          className="hero-wave absolute left-0 right-0 bottom-[-1px] h-40 w-[110%]"
+          viewBox="0 0 1440 180"
+          preserveAspectRatio="none"
+          style={{ animation: 'waveMove 3s ease-in-out infinite' }}
+        >
+          <path
+            d="M0,80 C240,160 480,0 720,80 C960,160 1200,60 1440,120 L1440,180 L0,180 Z"
+            fill="rgba(255,255,255,0.75)"
+          />
+        </svg>
+      </div>
+
+      <div className="container relative z-[2]" style={{ animation: 'fadeInUp 0.8s ease-out' }}>
+        <BookPanel />
+
+        <div className="flex gap-4.5 mt-4.5" style={{ animation: 'fadeInUp 0.8s ease-out 0.2s backwards' }}>
+          <Link href="/packages" className="btn outline hero-btn">
+            تعرّف على الباقات
+          </Link>
+          <Link href="/contact" className="btn outline hero-btn">
+            تواصل معنا
+          </Link>
+        </div>
+      </div>
+
+      <style jsx>{`
+        @keyframes floatY {
+          0%, 100% {
+            transform: translateY(0) translateX(0);
+          }
+          50% {
+            transform: translateY(-30px) translateX(20px);
+          }
+        }
+
+        @keyframes pulse {
+          0%, 100% {
+            opacity: 0.42;
+            transform: scale(1);
+          }
+          50% {
+            opacity: 0.55;
+            transform: scale(1.05);
+          }
+        }
+
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes fadeInDots {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 0.25;
+          }
+        }
+
+        @keyframes waveMove {
+          0%, 100% {
+            transform: translateX(0);
+          }
+          50% {
+            transform: translateX(-20px);
+          }
+        }
+
+        :global(.hero-btn) {
+          transition: all 0.3s ease;
+        }
+
+        :global(.hero-btn:hover) {
+          transform: translateY(-4px) scale(1.05);
+          box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        }
+      `}</style>
+    </header>
+  );
+}
+
+components/Navbar.tsx
+'use client';
+
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import Image from 'next/image';
+
+export default function Navbar() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsMenuOpen(false);
+    };
+
+    document.addEventListener('keydown', handleEsc);
+    return () => {
+      document.body.style.overflow = '';
+      document.removeEventListener('keydown', handleEsc);
+    };
+  }, [isMenuOpen]);
+
+  const navLinks = [
+    { href: '/', label: 'الرئيسية' },
+    { href: '/packages', label: 'الباقات' },
+    { href: '/blog', label: 'المدونة' },
+    { href: '/about', label: 'من نحن' },
+    { href: '/contact', label: 'تواصل' },
+  ];
+
+  return (
+    <>
+      <nav
+        className={`navbar fixed top-0 left-0 w-full z-[999] transition-all duration-400 ${
+          isScrolled ? 'bg-[rgba(44,118,74,0.6)]' : 'bg-[rgba(44,118,74,0.25)]'
+        }`}
+        style={{
+          backdropFilter: 'blur(18px) saturate(160%)',
+          WebkitBackdropFilter: 'blur(18px) saturate(160%)',
+          borderBottom: '1px solid rgba(255,255,255,0.15)',
+          boxShadow: isScrolled
+            ? '0 6px 30px rgba(0,0,0,0.12)'
+            : '0 4px 20px rgba(0,0,0,0.08)',
+        }}
+      >
+        <div className="container">
+          <div className="flex items-center justify-between h-16">
+            <Link href="/" className="brand flex items-center gap-2.5 font-extrabold no-underline hover:no-underline">
+              <div className="relative w-12 h-12">
+                <Image
+                  src="/assets/images/logo.png"
+                  alt="شعار عالم الصحة"
+                  width={48}
+                  height={48}
+                  className="rounded-full shadow-lg"
+                  style={{ objectFit: 'contain' }}
+                  priority
+                />
+              </div>
+              <span className="text-white text-lg hidden sm:inline drop-shadow-md">
+                عالم الصحة
+              </span>
+            </Link>
+
+            <div className="hidden lg:flex gap-4.5">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`px-2.5 py-2 rounded-lg font-semibold transition-colors no-underline ${
+                    pathname === link.href
+                      ? 'bg-[var(--muted)]'
+                      : 'hover:bg-[var(--muted)]'
+                  }`}
+                  style={{ color: '#213' }}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+
+            <button
+              className="menu-toggle lg:hidden w-[46px] h-10 border-none bg-transparent cursor-pointer rounded-xl relative"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              aria-label="قائمة التنقل"
+              aria-expanded={isMenuOpen}
+            >
+              <span
+                className={`bar block h-0.5 w-6 mx-auto my-1.5 bg-white rounded-sm transition-transform duration-250 shadow-sm ${
+                  isMenuOpen ? 'translate-y-2 rotate-45' : ''
+                }`}
+              />
+              <span
+                className={`bar block h-0.5 w-6 mx-auto my-1.5 bg-white rounded-sm transition-opacity duration-250 shadow-sm ${
+                  isMenuOpen ? 'opacity-0' : ''
+                }`}
+              />
+              <span
+                className={`bar block h-0.5 w-6 mx-auto my-1.5 bg-white rounded-sm transition-transform duration-250 shadow-sm ${
+                  isMenuOpen ? '-translate-y-2 -rotate-45' : ''
+                }`}
+              />
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      <div
+        className={`mobile-menu fixed inset-x-0 top-16 z-[998] transition-all duration-350 overflow-hidden ${
+          isMenuOpen ? 'h-[calc(100vh-64px)]' : 'h-0'
+        }`}
+        style={{
+          background: 'transparent',
+        }}
+      >
+        <div
+          className={`absolute inset-0 transition-opacity duration-350 ${
+            isMenuOpen ? 'opacity-100' : 'opacity-0'
+          }`}
+          style={{
+            backdropFilter: 'blur(18px) saturate(180%)',
+            WebkitBackdropFilter: 'blur(18px) saturate(180%)',
+            background:
+              'linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(242,242,242,0.92) 45%, rgba(235,235,235,0.9) 100%)',
+            boxShadow:
+              'inset 0 0 40px rgba(255,255,255,0.35), inset 0 0 120px rgba(255,255,255,0.25)',
+            borderBottom: '1px solid rgba(0,0,0,0.08)',
+          }}
+        />
+
+        <div className="mobile-inner relative z-10 grid gap-3 p-4 pb-5.5">
+          {navLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className={`block py-3 px-3.5 rounded-xl font-bold no-underline transition-all ${
+                pathname === link.href
+                  ? 'bg-[rgba(0,0,0,0.08)] border-[rgba(0,0,0,0.18)]'
+                  : 'bg-[rgba(0,0,0,0.04)] border-[rgba(0,0,0,0.10)] hover:bg-[rgba(0,0,0,0.08)]'
+              }`}
+              style={{
+                color: '#0F172A',
+                border: '1px solid',
+              }}
+              onClick={() => setIsMenuOpen(false)}
+            >
+              {link.label}
+            </Link>
+          ))}
+
+          <Link
+            href="/contact"
+            className="btn mt-2 text-center no-underline"
+            style={{
+              background: 'var(--accent)',
+              boxShadow: '0 10px 28px rgba(115,160,67,.35)',
+            }}
+            onClick={() => setIsMenuOpen(false)}
+          >
+            احجز الآن
+          </Link>
+        </div>
+      </div>
+    </>
+  );
+}
+
+components/PackageCard.tsx
+'use client';
+
+import Image from 'next/image';
+import type { Package } from '@/lib/data/packages';
+
+interface PackageCardProps {
+  package: Package;
+  onDetailsClick: (pkg: Package) => void;
+  onBookClick: (pkg: Package) => void;
+}
+
+export default function PackageCard({ package: pkg, onDetailsClick, onBookClick }: PackageCardProps) {
+  return (
+    <div className="card">
+      <div className="relative">
+        <Image
+          src={pkg.image}
+          alt={pkg.title}
+          width={400}
+          height={300}
+          className="w-full aspect-[4/3] object-cover"
+        />
+        <div className="absolute top-2.5 right-2.5 z-[2] bg-[rgba(255,255,255,0.92)] text-[var(--primary-dark)] border border-[rgba(0,0,0,0.06)] rounded-lg px-2 py-1 font-extrabold text-xs shadow-md">
+          باقة طبية
+        </div>
+        {pkg.icon && (
+          <div className="absolute top-2.5 left-2.5 z-[2] text-3xl drop-shadow-lg">
+            {pkg.icon}
+          </div>
+        )}
+      </div>
+      <div className="body flex flex-col gap-2 p-4 flex-1">
+        <div className="title text-xl font-extrabold leading-tight min-h-[2.6em] overflow-hidden text-[var(--primary-dark)]">
+          {pkg.title}
+        </div>
+        <p className="text-[#466257] m-0 min-h-[3.4em] overflow-hidden text-sm">
+          {pkg.description}
+        </p>
+        <div className="mt-2 flex items-center gap-1.5 text-xs text-[var(--accent)] font-bold">
+          <span className="w-1.5 h-1.5 bg-[var(--accent)] rounded-full"></span>
+          {pkg.features.length} فحص مشمول
+        </div>
+        <div className="actions mt-auto grid grid-cols-2 gap-2.5 pt-3">
+          <button
+            className="btn h-11"
+            type="button"
+            onClick={() => onBookClick(pkg)}
+            style={{
+              background: 'var(--accent)',
+              boxShadow: '0 4px 12px rgba(115,160,67,.3)',
+            }}
+          >
+            احجز الآن
+          </button>
+          <button
+            className="btn outline h-11"
+            type="button"
+            onClick={() => onDetailsClick(pkg)}
+          >
+            التفاصيل
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+components/PackageModal.tsx
+'use client';
+
+import { useEffect } from 'react';
+import Image from 'next/image';
+import type { Package } from '@/lib/data/packages';
+
+interface PackageModalProps {
+  package: Package | null;
+  isOpen: boolean;
+  onClose: () => void;
+  onBook: (packageTitle: string) => void;
+}
+
+export default function PackageModal({ package: pkg, isOpen, onClose, onBook }: PackageModalProps) {
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    if (isOpen) {
+      window.addEventListener('keydown', handleEscape);
+      return () => window.removeEventListener('keydown', handleEscape);
+    }
+  }, [isOpen, onClose]);
+
+  if (!isOpen || !pkg) return null;
+
+  const handleBook = () => {
+    onClose();
+    onBook(pkg.title);
+  };
+
+  return (
+    <div
+      className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn"
+      onClick={onClose}
+    >
+      <div
+        className="relative w-full max-w-4xl max-h-[90vh] bg-white rounded-3xl shadow-2xl overflow-hidden animate-slideUp"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          onClick={onClose}
+          className="absolute top-4 left-4 z-10 w-10 h-10 flex items-center justify-center bg-white/90 hover:bg-white rounded-full shadow-lg transition-all hover:scale-110"
+          aria-label="إغلاق"
+        >
+          <span className="text-2xl text-[var(--primary-dark)]">×</span>
+        </button>
+
+        <div className="overflow-y-auto max-h-[90vh] custom-scrollbar">
+          <div className="relative h-64 md:h-80 overflow-hidden">
+            <Image
+              src={pkg.image}
+              alt={pkg.title}
+              fill
+              className="object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+            <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
+              <div className="flex items-center gap-3 mb-2">
+                {pkg.icon && (
+                  <span className="text-4xl md:text-5xl">{pkg.icon}</span>
+                )}
+                <h2 className="text-2xl md:text-4xl font-extrabold text-white">
+                  {pkg.title}
+                </h2>
+              </div>
+              <p className="text-white/90 text-base md:text-lg">
+                {pkg.description}
+              </p>
+            </div>
+          </div>
+
+          <div className="p-6 md:p-8">
+            <div className="mb-6">
+              <h3 className="text-xl md:text-2xl font-extrabold text-[var(--primary-dark)] mb-4 flex items-center gap-2">
+                <span className="w-1.5 h-6 bg-[var(--accent)] rounded-full"></span>
+                الفحوصات المشمولة
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {pkg.features.map((feature, idx) => (
+                  <div
+                    key={idx}
+                    className="flex items-start gap-3 p-3 bg-[var(--muted)] rounded-xl hover:bg-[#e3f0e7] transition-colors"
+                  >
+                    <span className="flex-shrink-0 w-6 h-6 flex items-center justify-center bg-[var(--accent)] text-white rounded-full text-xs font-bold mt-0.5">
+                      {idx + 1}
+                    </span>
+                    <span className="text-[var(--primary-dark)] font-semibold text-sm md:text-base">
+                      {feature}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="bg-gradient-to-br from-[var(--primary-dark)] to-[var(--accent)] rounded-2xl p-6 text-white">
+              <p className="text-sm md:text-base mb-4 leading-relaxed">
+                احجز الآن واحصل على نتائج دقيقة وسريعة من منزلك. فريقنا المحترف جاهز لخدمتك.
+              </p>
+              <button
+                onClick={handleBook}
+                className="w-full bg-white text-[var(--primary-dark)] font-extrabold text-base md:text-lg py-4 rounded-xl hover:shadow-xl transition-all hover:scale-[1.02] active:scale-[0.98]"
+              >
+                احجز هذه الباقة الآن
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <style jsx>{`
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+
+        @keyframes slideUp {
+          from {
+            opacity: 0;
+            transform: translateY(30px) scale(0.95);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+
+        .animate-fadeIn {
+          animation: fadeIn 0.2s ease-out;
+        }
+
+        .animate-slideUp {
+          animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 8px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: #f1f5f3;
+          border-radius: 10px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: var(--accent);
+          border-radius: 10px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: var(--primary-dark);
+        }
+      `}</style>
+    </div>
+  );
+}
+
+components/PackagesSection.tsx
+'use client';
+
+import { useState } from 'react';
+import Link from 'next/link';
+import { packages } from '@/lib/data/packages';
+import type { Package } from '@/lib/data/packages';
+import PackageCard from './PackageCard';
+import PackageModal from './PackageModal';
+
+export default function PackagesSection() {
+  const featured = packages.slice(0, 3);
+  const [selectedPackage, setSelectedPackage] = useState<Package | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleDetailsClick = (pkg: Package) => {
+    setSelectedPackage(pkg);
+    setIsModalOpen(true);
+  };
+
+  const handleBookClick = (pkg: Package) => {
+    const bookPanel = document.getElementById('book-panel');
+    if (bookPanel) {
+      bookPanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+      setTimeout(() => {
+        const bookButton = bookPanel.querySelector('button[type="button"]') as HTMLButtonElement;
+        if (bookButton && bookButton.textContent?.includes('احجز الآن')) {
+          bookButton.click();
+
+          setTimeout(() => {
+            const packageSelect = document.querySelector('select[name="package"]') as HTMLSelectElement;
+            if (packageSelect) {
+              packageSelect.value = pkg.title;
+              packageSelect.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+          }, 300);
+        }
+      }, 100);
+    }
+  };
+
+  const handleModalBook = (packageTitle: string) => {
+    const bookPanel = document.getElementById('book-panel');
+    if (bookPanel) {
+      bookPanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+      setTimeout(() => {
+        const bookButton = bookPanel.querySelector('button[type="button"]') as HTMLButtonElement;
+        if (bookButton && bookButton.textContent?.includes('احجز الآن')) {
+          bookButton.click();
+
+          setTimeout(() => {
+            const packageSelect = document.querySelector('select[name="package"]') as HTMLSelectElement;
+            if (packageSelect) {
+              packageSelect.value = packageTitle;
+              packageSelect.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+          }, 300);
+        }
+      }, 100);
+    }
+  };
+
+  return (
+    <>
+      <section
+        className="section py-20"
+        style={{ background: 'var(--muted)' }}
+      >
+        <div className="container">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-extrabold text-[var(--primary-dark)]">مختارات من الباقات</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5.5">
+            {featured.map((pkg) => (
+              <PackageCard
+                key={pkg.id}
+                package={pkg}
+                onDetailsClick={handleDetailsClick}
+                onBookClick={handleBookClick}
+              />
+            ))}
+          </div>
+          <div className="text-center mt-8">
+            <Link href="/packages" className="btn">
+              مشاهدة كل الباقات
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <PackageModal
+        package={selectedPackage}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onBook={handleModalBook}
+      />
+    </>
+  );
+}
+
+components/TestimonialsSection.tsx
+import Image from 'next/image';
+import { testimonials } from '@/lib/data/testimonials';
+
+export default function TestimonialsSection() {
+  return (
+    <section className="section py-20">
+      <div className="container">
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-extrabold text-[var(--primary-dark)]">
+            آراء عملائنا
+          </h2>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5.5">
+          {testimonials.map((t) => (
+            <div key={t.id} className="card">
+              <div className="body p-5.5 text-center">
+                <Image
+                  src={t.image}
+                  alt={t.name}
+                  width={96}
+                  height={96}
+                  className="w-24 h-24 rounded-full object-cover border-4 border-[var(--muted)] shadow-md mx-auto"
+                />
+                <h4 className="mt-3 mb-1.5 text-[var(--primary-dark)] font-extrabold">
+                  {t.name}
+                </h4>
+                <div className="flex items-center justify-center gap-0.5 mb-2">
+                  {[...Array(5)].map((_, i) => (
+                    <span key={i} className="text-yellow-400 text-sm">★</span>
+                  ))}
+                </div>
+                <p className="text-[#475d52] text-[15px] leading-snug">
+                  &ldquo;{t.text}&rdquo;
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+hooks/use-toast.ts
+'use client';
+
+// Inspired by react-hot-toast library
+import * as React from 'react';
+
+import type { ToastActionElement, ToastProps } from '@/components/ui/toast';
+
+const TOAST_LIMIT = 1;
+const TOAST_REMOVE_DELAY = 1000000;
+
+type ToasterToast = ToastProps & {
+  id: string;
+  title?: React.ReactNode;
+  description?: React.ReactNode;
+  action?: ToastActionElement;
+};
+
+const actionTypes = {
+  ADD_TOAST: 'ADD_TOAST',
+  UPDATE_TOAST: 'UPDATE_TOAST',
+  DISMISS_TOAST: 'DISMISS_TOAST',
+  REMOVE_TOAST: 'REMOVE_TOAST',
+} as const;
+
+let count = 0;
+
+function genId() {
+  count = (count + 1) % Number.MAX_SAFE_INTEGER;
+  return count.toString();
+}
+
+type ActionType = typeof actionTypes;
+
+type Action =
+  | {
+      type: ActionType['ADD_TOAST'];
+      toast: ToasterToast;
+    }
+  | {
+      type: ActionType['UPDATE_TOAST'];
+      toast: Partial<ToasterToast>;
+    }
+  | {
+      type: ActionType['DISMISS_TOAST'];
+      toastId?: ToasterToast['id'];
+    }
+  | {
+      type: ActionType['REMOVE_TOAST'];
+      toastId?: ToasterToast['id'];
+    };
+
+interface State {
+  toasts: ToasterToast[];
+}
+
+const toastTimeouts = new Map<string, ReturnType<typeof setTimeout>>();
+
+const addToRemoveQueue = (toastId: string) => {
+  if (toastTimeouts.has(toastId)) {
+    return;
+  }
+
+  const timeout = setTimeout(() => {
+    toastTimeouts.delete(toastId);
+    dispatch({
+      type: 'REMOVE_TOAST',
+      toastId: toastId,
+    });
+  }, TOAST_REMOVE_DELAY);
+
+  toastTimeouts.set(toastId, timeout);
+};
+
+export const reducer = (state: State, action: Action): State => {
+  switch (action.type) {
+    case 'ADD_TOAST':
+      return {
+        ...state,
+        toasts: [action.toast, ...state.toasts].slice(0, TOAST_LIMIT),
+      };
+
+    case 'UPDATE_TOAST':
+      return {
+        ...state,
+        toasts: state.toasts.map((t) =>
+          t.id === action.toast.id ? { ...t, ...action.toast } : t
+        ),
+      };
+
+    case 'DISMISS_TOAST': {
+      const { toastId } = action;
+
+      // ! Side effects ! - This could be extracted into a dismissToast() action,
+      // but I'll keep it here for simplicity
+      if (toastId) {
+        addToRemoveQueue(toastId);
+      } else {
+        state.toasts.forEach((toast) => {
+          addToRemoveQueue(toast.id);
+        });
+      }
+
+      return {
+        ...state,
+        toasts: state.toasts.map((t) =>
+          t.id === toastId || toastId === undefined
+            ? {
+                ...t,
+                open: false,
+              }
+            : t
+        ),
+      };
+    }
+    case 'REMOVE_TOAST':
+      if (action.toastId === undefined) {
+        return {
+          ...state,
+          toasts: [],
+        };
+      }
+      return {
+        ...state,
+        toasts: state.toasts.filter((t) => t.id !== action.toastId),
+      };
+  }
+};
+
+const listeners: Array<(state: State) => void> = [];
+
+let memoryState: State = { toasts: [] };
+
+function dispatch(action: Action) {
+  memoryState = reducer(memoryState, action);
+  listeners.forEach((listener) => {
+    listener(memoryState);
+  });
+}
+
+type Toast = Omit<ToasterToast, 'id'>;
+
+function toast({ ...props }: Toast) {
+  const id = genId();
+
+  const update = (props: ToasterToast) =>
+    dispatch({
+      type: 'UPDATE_TOAST',
+      toast: { ...props, id },
+    });
+  const dismiss = () => dispatch({ type: 'DISMISS_TOAST', toastId: id });
+
+  dispatch({
+    type: 'ADD_TOAST',
+    toast: {
+      ...props,
+      id,
+      open: true,
+      onOpenChange: (open) => {
+        if (!open) dismiss();
+      },
+    },
+  });
+
+  return {
+    id: id,
+    dismiss,
+    update,
+  };
+}
+
+function useToast() {
+  const [state, setState] = React.useState<State>(memoryState);
+
+  React.useEffect(() => {
+    listeners.push(setState);
+    return () => {
+      const index = listeners.indexOf(setState);
+      if (index > -1) {
+        listeners.splice(index, 1);
+      }
+    };
+  }, [state]);
+
+  return {
+    ...state,
+    toast,
+    dismiss: (toastId?: string) => dispatch({ type: 'DISMISS_TOAST', toastId }),
+  };
+}
+
+export { useToast, toast };
+
+
