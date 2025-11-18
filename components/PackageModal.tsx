@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import Image from 'next/image';
 import type { Package } from '@/lib/data/packages';
+import { useI18n } from '@/components/LanguageProvider';
 
 interface PackageModalProps {
   package: Package | null;
@@ -12,12 +13,10 @@ interface PackageModalProps {
 }
 
 export default function PackageModal({ package: pkg, isOpen, onClose, onBook }: PackageModalProps) {
+  const { t } = useI18n();
+
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
+    document.body.style.overflow = isOpen ? 'hidden' : 'unset';
     return () => {
       document.body.style.overflow = 'unset';
     };
@@ -52,7 +51,7 @@ export default function PackageModal({ package: pkg, isOpen, onClose, onBook }: 
         <button
           onClick={onClose}
           className="absolute top-4 left-4 z-10 w-10 h-10 flex items-center justify-center bg-white/90 hover:bg-white rounded-full shadow-lg transition-all hover:scale-110"
-          aria-label="إغلاق"
+          aria-label={t('common.close')}
         >
           <span className="text-2xl text-[var(--primary-dark)]">×</span>
         </button>
@@ -84,8 +83,8 @@ export default function PackageModal({ package: pkg, isOpen, onClose, onBook }: 
           <div className="p-6 md:p-8">
             <div className="mb-6">
               <h3 className="text-xl md:text-2xl font-extrabold text-[var(--primary-dark)] mb-4 flex items-center gap-2">
-                <span className="w-1.5 h-6 bg-[var(--accent)] rounded-full"></span>
-                الفحوصات المشمولة
+                <span className="w-1.5 h-6 bg-[var(--accent)] rounded-full" />
+                {t('packages.modal.testsTitle')}
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {pkg.features.map((feature, idx) => (
@@ -106,13 +105,13 @@ export default function PackageModal({ package: pkg, isOpen, onClose, onBook }: 
 
             <div className="bg-gradient-to-br from-[var(--primary-dark)] to-[var(--accent)] rounded-2xl p-6 text-white">
               <p className="text-sm md:text-base mb-4 leading-relaxed">
-                احجز الآن واحصل على نتائج دقيقة وسريعة من منزلك. فريقنا المحترف جاهز لخدمتك.
+                {t('packages.modal.ctaText')}
               </p>
               <button
                 onClick={handleBook}
                 className="w-full bg-white text-[var(--primary-dark)] font-extrabold text-base md:text-lg py-4 rounded-xl hover:shadow-xl transition-all hover:scale-[1.02] active:scale-[0.98]"
               >
-                احجز هذه الباقة الآن
+                {t('packages.modal.btnBook')}
               </button>
             </div>
           </div>

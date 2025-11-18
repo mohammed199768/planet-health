@@ -4,6 +4,7 @@ import './globals.css';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import AnalyticsTracker from './AnalyticsTracker';
+import { LanguageProvider } from '@/components/LanguageProvider';
 
 const cairo = Cairo({
   subsets: ['arabic'],
@@ -63,9 +64,11 @@ export default function RootLayout({
         {/* تسجيل الزيارات */}
         <AnalyticsTracker />
 
-        <Navbar />
-        {children}
-        <Footer />
+       <LanguageProvider>
+          <Navbar />
+          {children}
+          <Footer />
+        </LanguageProvider>
       </body>
     </html>
   );

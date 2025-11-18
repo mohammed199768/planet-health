@@ -5,8 +5,10 @@ import { posts } from '@/lib/data/posts';
 import type { Post } from '@/lib/data/posts';
 import Image from 'next/image';
 import BlogPostModal from '@/components/BlogPostModal';
+import { useI18n } from '@/components/LanguageProvider';
 
 export default function BlogPage() {
+  const { t, lang } = useI18n();
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -15,14 +17,26 @@ export default function BlogPage() {
     setIsModalOpen(true);
   };
 
+  const formatDate = (dateStr: string) => {
+    const d = new Date(dateStr);
+    if (Number.isNaN(d.getTime())) return dateStr;
+    return d.toLocaleDateString(lang === 'ar' ? 'ar-SA' : 'en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+  };
+
   return (
     <>
       <main className="section py-20" style={{ background: 'var(--muted)' }}>
         <div className="container">
           <div className="text-center mb-10">
-            <h1 className="text-4xl font-extrabold text-[var(--primary-dark)] mb-3">المدونة الطبية</h1>
+            <h1 className="text-4xl font-extrabold text-[var(--primary-dark)] mb-3">
+              {t('blog.page.title')}
+            </h1>
             <p className="text-lg text-[#466257] max-w-2xl mx-auto">
-              مقالات ونصائح طبية موثوقة لحياة صحية أفضل
+              {t('blog.page.subtitle')}
             </p>
           </div>
 
@@ -49,7 +63,7 @@ export default function BlogPage() {
 
                 <div className="p-5">
                   <div className="flex items-center gap-2 text-sm text-[#5f7b71] mb-3">
-                    <span>📅 {post.date}</span>
+                    <span>📅 {formatDate(post.date)}</span>
                     {post.readTime && (
                       <>
                         <span>•</span>
@@ -74,8 +88,8 @@ export default function BlogPage() {
                   )}
 
                   <div className="mt-4 inline-flex items-center gap-2 text-[var(--accent)] font-bold text-sm hover:gap-3 transition-all duration-200">
-                    اقرأ المقال كاملاً
-                    <span>←</span>
+                    {t('blog.card.readMore')}
+                    <span>{lang === 'ar' ? '←' : '→'}</span>
                   </div>
                 </div>
               </article>
@@ -87,8 +101,10 @@ export default function BlogPage() {
               <div className="inline-flex items-center justify-center w-20 h-20 bg-white rounded-full shadow-lg mb-4">
                 <span className="text-4xl">📝</span>
               </div>
-              <h3 className="text-2xl font-bold text-[var(--primary-dark)] mb-2">قريباً</h3>
-              <p className="text-[#5f7b71]">نعمل على إضافة مقالات طبية مفيدة لك</p>
+              <h3 className="text-2xl font-bold text-[var(--primary-dark)] mb-2">
+                {t('blog.empty.title')}
+              </h3>
+              <p className="text-[#5f7b71]">{t('blog.empty.text')}</p>
             </div>
           )}
         </div>

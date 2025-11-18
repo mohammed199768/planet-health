@@ -6,11 +6,41 @@ import { packages } from '@/lib/data/packages';
 import type { Package } from '@/lib/data/packages';
 import PackageCard from './PackageCard';
 import PackageModal from './PackageModal';
+import { useI18n } from '@/components/LanguageProvider';
 
 export default function PackagesSection() {
+  const { t } = useI18n();
   const featured = packages.slice(0, 3);
   const [selectedPackage, setSelectedPackage] = useState<Package | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openBookPanelWithPackage = (title: string) => {
+    const bookPanel = document.getElementById('book-panel');
+    if (!bookPanel) return;
+
+    bookPanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    setTimeout(() => {
+      const bookButton = bookPanel.querySelector(
+        'button[type="button"]'
+      ) as HTMLButtonElement | null;
+
+      if (bookButton && bookButton.textContent?.includes(t('book.btn.open'))) {
+        bookButton.click();
+
+        setTimeout(() => {
+          const packageSelect = document.querySelector(
+            'select[name="package"]'
+          ) as HTMLSelectElement | null;
+
+          if (packageSelect) {
+            packageSelect.value = title;
+            packageSelect.dispatchEvent(new Event('change', { bubbles: true }));
+          }
+        }, 300);
+      }
+    }, 100);
+  };
 
   const handleDetailsClick = (pkg: Package) => {
     setSelectedPackage(pkg);
@@ -18,47 +48,11 @@ export default function PackagesSection() {
   };
 
   const handleBookClick = (pkg: Package) => {
-    const bookPanel = document.getElementById('book-panel');
-    if (bookPanel) {
-      bookPanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-      setTimeout(() => {
-        const bookButton = bookPanel.querySelector('button[type="button"]') as HTMLButtonElement;
-        if (bookButton && bookButton.textContent?.includes('احجز الآن')) {
-          bookButton.click();
-
-          setTimeout(() => {
-            const packageSelect = document.querySelector('select[name="package"]') as HTMLSelectElement;
-            if (packageSelect) {
-              packageSelect.value = pkg.title;
-              packageSelect.dispatchEvent(new Event('change', { bubbles: true }));
-            }
-          }, 300);
-        }
-      }, 100);
-    }
+    openBookPanelWithPackage(pkg.title);
   };
 
   const handleModalBook = (packageTitle: string) => {
-    const bookPanel = document.getElementById('book-panel');
-    if (bookPanel) {
-      bookPanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-      setTimeout(() => {
-        const bookButton = bookPanel.querySelector('button[type="button"]') as HTMLButtonElement;
-        if (bookButton && bookButton.textContent?.includes('احجز الآن')) {
-          bookButton.click();
-
-          setTimeout(() => {
-            const packageSelect = document.querySelector('select[name="package"]') as HTMLSelectElement;
-            if (packageSelect) {
-              packageSelect.value = packageTitle;
-              packageSelect.dispatchEvent(new Event('change', { bubbles: true }));
-            }
-          }, 300);
-        }
-      }, 100);
-    }
+    openBookPanelWithPackage(packageTitle);
   };
 
   return (
@@ -69,9 +63,11 @@ export default function PackagesSection() {
       >
         <div className="container">
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-extrabold text-[var(--primary-dark)]">مختارات من الباقات</h2>
+            <h2 className="text-3xl font-extrabold text-[var(--primary-dark)]">
+              {t('packages.featured.title')}
+            </h2>
           </div>
-<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-7 gap-x-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-7 gap-x-5">
             {featured.map((pkg) => (
               <PackageCard
                 key={pkg.id}
@@ -83,7 +79,7 @@ export default function PackagesSection() {
           </div>
           <div className="text-center mt-8">
             <Link href="/packages" className="btn">
-              مشاهدة كل الباقات
+              {t('packages.featured.viewAll')}
             </Link>
           </div>
         </div>

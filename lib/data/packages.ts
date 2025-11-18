@@ -37,7 +37,7 @@ export const packages: Package[] = [
     features: [
       'CBC',
       'وظائف الكلى (Urea, Creatinine)',
-      'الكهارل (Na, K, Cl)',
+      'املاح الدم(Na, K, Cl)',
       'Uric acid',
       'Lipid profile',
       'إنزيمات القلب (CK-MB, Troponin)',

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import { useI18n } from '@/components/LanguageProvider';
 
 function animateCounter(element: HTMLElement, target: number, duration: number) {
   const start = 0;
@@ -20,6 +21,7 @@ function animateCounter(element: HTMLElement, target: number, duration: number) 
 }
 
 export default function AboutPage() {
+  const { t } = useI18n();
   const [hasAnimated, setHasAnimated] = useState(false);
 
   useEffect(() => {
@@ -38,33 +40,33 @@ export default function AboutPage() {
   const features = [
     {
       icon: '🎯',
-      title: 'دقة عالية',
-      desc: 'نعمل مع أفضل المختبرات المعتمدة لضمان نتائج دقيقة وموثوقة'
+      titleKey: 'about.features.accuracy.title',
+      descKey: 'about.features.accuracy.desc',
     },
     {
       icon: '🔒',
-      title: 'خصوصية تامة',
-      desc: 'نحترم خصوصيتك ونحافظ على سرية معلوماتك الطبية'
+      titleKey: 'about.features.privacy.title',
+      descKey: 'about.features.privacy.desc',
     },
     {
       icon: '🏠',
-      title: 'خدمة منزلية',
-      desc: 'فريق مختص يصل إلى منزلك في الوقت المناسب لك'
+      titleKey: 'about.features.homeService.title',
+      descKey: 'about.features.homeService.desc',
     },
     {
       icon: '⚡',
-      title: 'نتائج سريعة',
-      desc: 'نتائج دقيقة في وقت قياسي عبر واتساب أو البريد'
-    }
+      titleKey: 'about.features.fastResults.title',
+      descKey: 'about.features.fastResults.desc',
+    },
   ];
 
   const values = [
-    'الدقّة قبل السرعة',
-    'احترام خصوصية المريض',
-    'تبسيط المعلومة الطبية',
-    'خدمة ما بعد الفحص',
-    'التطوير المستمر',
-    'الشفافية في التعامل'
+    'about.values.1',
+    'about.values.2',
+    'about.values.3',
+    'about.values.4',
+    'about.values.5',
+    'about.values.6',
   ];
 
   return (
@@ -79,7 +81,8 @@ export default function AboutPage() {
         <div
           className="absolute inset-0 opacity-10"
           style={{
-            backgroundImage: 'radial-gradient(circle at 20px 20px, rgba(255,255,255,0.15) 2px, transparent 0)',
+            backgroundImage:
+              'radial-gradient(circle at 20px 20px, rgba(255,255,255,0.15) 2px, transparent 0)',
             backgroundSize: '40px 40px',
           }}
         />
@@ -102,35 +105,35 @@ export default function AboutPage() {
         />
 
         <div className="container relative z-10 py-24 text-center">
-      <div
-  className="inline-flex items-center justify-center w-28 h-28 bg-white/10 backdrop-blur-lg rounded-3xl p-4 shadow-2xl mb-6 border border-white/20"
-  style={{ animation: 'fadeInUp 0.8s ease-out' }}
->
-  <div className="relative w-full h-full">
-    <Image
-      src="/assets/images/logo.png"
-      alt="شعار عالم الصحة"
-      fill
-      className="rounded-full object-contain"
-      priority
-    />
-  </div>
-</div>
+          <div
+            className="inline-flex items-center justify-center w-28 h-28 bg-white/10 backdrop-blur-lg rounded-3xl p-4 shadow-2xl mb-6 border border-white/20"
+            style={{ animation: 'fadeInUp 0.8s ease-out' }}
+          >
+            <div className="relative w-full h-full">
+              <Image
+                src="/assets/images/logo.png"
+                alt={t('nav.brand')}
+                fill
+                className="rounded-full object-contain"
+                priority
+              />
+            </div>
+          </div>
 
           <h1
             className="text-5xl md:text-6xl font-black mb-4"
             style={{ animation: 'fadeInUp 0.8s ease-out 0.1s backwards' }}
           >
-            من نحن
+            {t('about.hero.title')}
           </h1>
 
           <p
             className="text-xl md:text-2xl opacity-95 mb-10 max-w-3xl mx-auto leading-relaxed"
             style={{ animation: 'fadeInUp 0.8s ease-out 0.2s backwards' }}
           >
-            مبادرة أردنية رائدة لتقديم خدمات المختبر الطبي إلى باب بيتك
+            {t('about.hero.subtitle')}
             <br />
-            <span className="text-lg opacity-80">بدقة، خصوصية، وثقة</span>
+            <span className="text-lg opacity-80">{t('about.hero.tagline')}</span>
           </p>
 
           <div
@@ -138,9 +141,9 @@ export default function AboutPage() {
             style={{ animation: 'fadeInUp 0.8s ease-out 0.3s backwards' }}
           >
             {[
-              { label: 'الزوار', value: 'visitors', target: 5420 },
-              { label: 'العملاء', value: 'clients', target: 1230 },
-              { label: 'الفحوصات', value: 'tests', target: 8750 }
+              { labelKey: 'about.stats.visitors', value: 'visitors', target: 5420 },
+              { labelKey: 'about.stats.clients', value: 'clients', target: 1230 },
+              { labelKey: 'about.stats.tests', value: 'tests', target: 8750 },
             ].map((stat, idx) => (
               <div
                 key={idx}
@@ -151,7 +154,7 @@ export default function AboutPage() {
                   boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
                 }}
               >
-                <div className="text-sm opacity-90 mb-2">{stat.label}</div>
+                <div className="text-sm opacity-90 mb-2">{t(stat.labelKey)}</div>
                 <div
                   className="num text-4xl font-black text-white"
                   data-counter={stat.value}
@@ -165,8 +168,13 @@ export default function AboutPage() {
 
         <style jsx>{`
           @keyframes float {
-            0%, 100% { transform: translateY(0) translateX(0); }
-            50% { transform: translateY(-30px) translateX(20px); }
+            0%,
+            100% {
+              transform: translateY(0) translateX(0);
+            }
+            50% {
+              transform: translateY(-30px) translateX(20px);
+            }
           }
           @keyframes fadeInUp {
             from {
@@ -184,9 +192,11 @@ export default function AboutPage() {
       <main className="about section py-20">
         <div className="container">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-black text-[var(--primary-dark)] mb-4">لماذا عالم الصحة؟</h2>
+            <h2 className="text-4xl font-black text-[var(--primary-dark)] mb-4">
+              {t('about.why.title')}
+            </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              نجمع بين الاحترافية الطبية وسهولة الوصول لنقدم لك تجربة فريدة
+              {t('about.why.subtitle')}
             </p>
           </div>
 
@@ -204,16 +214,17 @@ export default function AboutPage() {
                 <div
                   className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
                   style={{
-                    background: 'linear-gradient(135deg, rgba(115,160,67,0.05), rgba(44,118,74,0.05))',
+                    background:
+                      'linear-gradient(135deg, rgba(115,160,67,0.05), rgba(44,118,74,0.05))',
                   }}
                 />
                 <div className="relative z-10">
                   <div className="text-5xl mb-4">{feature.icon}</div>
                   <h3 className="text-xl font-bold text-[var(--primary-dark)] mb-3">
-                    {feature.title}
+                    {t(feature.titleKey)}
                   </h3>
                   <p className="text-gray-600 leading-relaxed">
-                    {feature.desc}
+                    {t(feature.descKey)}
                   </p>
                 </div>
               </div>
@@ -224,7 +235,8 @@ export default function AboutPage() {
             <div
               className="mission-card rounded-3xl p-10 backdrop-blur-xl"
               style={{
-                background: 'linear-gradient(135deg, rgba(115,160,67,0.1), rgba(44,118,74,0.05))',
+                background:
+                  'linear-gradient(135deg, rgba(115,160,67,0.1), rgba(44,118,74,0.05))',
                 border: '1px solid rgba(115,160,67,0.2)',
                 boxShadow: '0 8px 32px rgba(0,0,0,0.08)',
               }}
@@ -233,25 +245,27 @@ export default function AboutPage() {
                 <div
                   className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl"
                   style={{
-                    background: 'linear-gradient(135deg, var(--accent), var(--primary))',
+                    background:
+                      'linear-gradient(135deg, var(--accent), var(--primary))',
                     boxShadow: '0 8px 20px rgba(115,160,67,0.3)',
                   }}
                 >
                   🎯
                 </div>
-                <h2 className="text-3xl font-black text-[var(--primary-dark)]">رسالتنا</h2>
+                <h2 className="text-3xl font-black text-[var(--primary-dark)]">
+                  {t('about.mission.title')}
+                </h2>
               </div>
               <p className="text-lg text-[#355243] leading-relaxed">
-                أن نجعل الفحص الطبي أمرًا بسيطًا ومتاحًا للجميع، مع تجربة ودّية تبدأ من رسالة واتساب
-                وتنتهي بنتائج موثوقة بين يديك. نؤمن بأن الصحة حق للجميع ونسعى لتوفير خدمات طبية
-                عالية الجودة في راحة منزلك.
+                {t('about.mission.text')}
               </p>
             </div>
 
             <div
               className="partnership-card rounded-3xl p-10 backdrop-blur-xl"
               style={{
-                background: 'linear-gradient(135deg, rgba(44,118,74,0.1), rgba(31,81,55,0.05))',
+                background:
+                  'linear-gradient(135deg, rgba(44,118,74,0.1), rgba(31,81,55,0.05))',
                 border: '1px solid rgba(44,118,74,0.2)',
                 boxShadow: '0 8px 32px rgba(0,0,0,0.08)',
               }}
@@ -260,18 +274,19 @@ export default function AboutPage() {
                 <div
                   className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl"
                   style={{
-                    background: 'linear-gradient(135deg, var(--primary), var(--primary-dark))',
+                    background:
+                      'linear-gradient(135deg, var(--primary), var(--primary-dark))',
                     boxShadow: '0 8px 20px rgba(44,118,74,0.3)',
                   }}
                 >
                   🤝
                 </div>
-                <h2 className="text-3xl font-black text-[var(--primary-dark)]">شراكاتنا</h2>
+                <h2 className="text-3xl font-black text-[var(--primary-dark)]">
+                  {t('about.partners.title')}
+                </h2>
               </div>
               <p className="text-lg text-[#355243] leading-relaxed">
-                نعمل بالتعاون مع أفضل المختبرات المرخّصة والمعتمدة في الأردن لضمان أعلى معايير
-                الجودة والدقة. شراكاتنا الاستراتيجية تضمن لك الحصول على نتائج موثوقة وخدمة
-                احترافية في كل مرة.
+                {t('about.partners.text')}
               </p>
             </div>
           </div>
@@ -284,14 +299,17 @@ export default function AboutPage() {
               boxShadow: '0 8px 32px rgba(0,0,0,0.08)',
             }}
           >
-            <h2 className="text-3xl font-black text-[var(--primary-dark)] mb-8">قيمنا ومبادئنا</h2>
+            <h2 className="text-3xl font-black text-[var(--primary-dark)] mb-8">
+              {t('about.values.title')}
+            </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
-              {values.map((value, idx) => (
+              {values.map((valueKey, idx) => (
                 <div
                   key={idx}
                   className="value-item rounded-xl p-5 transition-all hover:scale-105 hover:shadow-lg"
                   style={{
-                    background: 'linear-gradient(135deg, rgba(115,160,67,0.08), rgba(44,118,74,0.05))',
+                    background:
+                      'linear-gradient(135deg, rgba(115,160,67,0.08), rgba(44,118,74,0.05))',
                     border: '1px solid rgba(115,160,67,0.15)',
                   }}
                 >
@@ -300,7 +318,9 @@ export default function AboutPage() {
                       className="w-2 h-2 rounded-full"
                       style={{ background: 'var(--accent)' }}
                     />
-                    <span className="text-[var(--primary-dark)] font-bold">{value}</span>
+                    <span className="text-[var(--primary-dark)] font-bold">
+                      {t(valueKey)}
+                    </span>
                   </div>
                 </div>
               ))}
@@ -308,12 +328,29 @@ export default function AboutPage() {
           </div>
 
           <div className="text-center mt-16">
-            <h3 className="text-2xl font-bold text-[var(--primary-dark)] mb-6">تواصل معنا</h3>
+            <h3 className="text-2xl font-bold text-[var(--primary-dark)] mb-6">
+              {t('about.contact.title')}
+            </h3>
             <div className="flex justify-center gap-4">
               {[
-                { href: 'https://wa.me/962779667168', icon: 'fa-whatsapp', bg: 'linear-gradient(135deg, #25D366, #20b858)', label: 'واتساب' },
-                { href: 'https://www.instagram.com/homoblood', icon: 'fa-instagram', bg: 'linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045)', label: 'إنستغرام' },
-                { href: 'https://www.facebook.com', icon: 'fa-facebook-f', bg: 'linear-gradient(135deg, #1877F2, #0d5bc6)', label: 'فيسبوك' },
+                {
+                  href: 'https://wa.me/962779667168',
+                  icon: 'fa-whatsapp',
+                  bg: 'linear-gradient(135deg, #25D366, #20b858)',
+                  label: 'WhatsApp',
+                },
+                {
+                  href: 'https://www.instagram.com/homoblood',
+                  icon: 'fa-instagram',
+                  bg: 'linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045)',
+                  label: 'Instagram',
+                },
+                {
+                  href: 'https://www.facebook.com',
+                  icon: 'fa-facebook-f',
+                  bg: 'linear-gradient(135deg, #1877F2, #0d5bc6)',
+                  label: 'Facebook',
+                },
               ].map((social, idx) => (
                 <a
                   key={idx}
@@ -323,7 +360,7 @@ export default function AboutPage() {
                   className="w-14 h-14 grid place-items-center rounded-xl text-white text-xl transition-all hover:translate-y-[-6px] hover:scale-110 no-underline"
                   style={{
                     background: social.bg,
-                    boxShadow: '0 8px 24px rgba(0,0,0,0.15)'
+                    boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
                   }}
                   aria-label={social.label}
                 >

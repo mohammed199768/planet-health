@@ -2,8 +2,12 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+import { useI18n } from '@/components/LanguageProvider';
 
 export default function Footer() {
+  const { t } = useI18n();
+  const year = new Date().getFullYear();
+
   return (
     <footer
       className="footer relative overflow-hidden"
@@ -17,7 +21,8 @@ export default function Footer() {
       <div
         className="absolute inset-0 opacity-5 pointer-events-none"
         style={{
-          backgroundImage: 'radial-gradient(circle at 20px 20px, rgba(255,255,255,0.1) 2px, transparent 0)',
+          backgroundImage:
+            'radial-gradient(circle at 20px 20px, rgba(255,255,255,0.1) 2px, transparent 0)',
           backgroundSize: '40px 40px',
         }}
       />
@@ -33,23 +38,25 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
           <div className="lg:col-span-2">
             <div className="flex items-center gap-3 mb-4">
-        <div className="relative w-14 h-14">
-  <Image
-    src="/assets/images/logo.png"
-    alt="شعار عالم الصحة"
-    fill
-    className="rounded-full shadow-lg object-contain"
-    priority
-  />
-</div>
+              <div className="relative w-14 h-14">
+                <Image
+                  src="/assets/images/logo.png"
+                  alt={t('nav.brand')}
+                  fill
+                  className="rounded-full shadow-lg object-contain"
+                  priority
+                />
+              </div>
 
-              <h3 className="text-white text-2xl font-extrabold m-0">عالم الصحة</h3>
+              <h3 className="text-white text-2xl font-extrabold m-0">
+                {t('nav.brand')}
+              </h3>
             </div>
             <p className="mb-5 text-[#c5e5d0] leading-relaxed max-w-md">
-              مبادرة أردنية رائدة في تقديم خدمات المختبر الطبي المنزلي بدقة عالية وخصوصية تامة.
-              نعمل مع أفضل المختبرات المعتمدة لضمان أفضل النتائج.
+              {t('footer.description')}{/* 🔑 */}
             </p>
             <div className="flex gap-3 mt-5">
+              {/* واتساب */}
               <a
                 href="https://wa.me/962779667168"
                 target="_blank"
@@ -59,10 +66,11 @@ export default function Footer() {
                   background: 'linear-gradient(135deg, #25D366, #20b858)',
                   boxShadow: '0 8px 20px rgba(37, 211, 102, 0.3)',
                 }}
-                aria-label="واتساب"
+                aria-label="WhatsApp"
               >
                 <i className="fab fa-whatsapp" />
               </a>
+              {/* إنستغرام */}
               <a
                 href="https://www.instagram.com/homoblood"
                 target="_blank"
@@ -73,10 +81,11 @@ export default function Footer() {
                     'linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045)',
                   boxShadow: '0 8px 20px rgba(131, 58, 180, 0.3)',
                 }}
-                aria-label="إنستغرام"
+                aria-label="Instagram"
               >
                 <i className="fab fa-instagram" />
               </a>
+              {/* فيسبوك */}
               <a
                 href="https://www.facebook.com"
                 target="_blank"
@@ -86,7 +95,7 @@ export default function Footer() {
                   background: 'linear-gradient(135deg, #1877F2, #0d5bc6)',
                   boxShadow: '0 8px 20px rgba(24, 119, 242, 0.3)',
                 }}
-                aria-label="فيسبوك"
+                aria-label="Facebook"
               >
                 <i className="fab fa-facebook-f" />
               </a>
@@ -95,23 +104,25 @@ export default function Footer() {
 
           <div>
             <h4 className="text-white text-lg mb-4 font-extrabold flex items-center gap-2">
-              <span className="w-1 h-6 bg-[var(--accent)] rounded-full"></span>
-              روابط سريعة
+              <span className="w-1 h-6 bg-[var(--accent)] rounded-full" />
+              {t('footer.quickLinks')}{/* 🔑 */}
             </h4>
             <ul className="list-none p-0 m-0 space-y-3">
               {[
-                { href: '/', label: 'الرئيسية' },
-                { href: '/packages', label: 'الباقات' },
-                { href: '/blog', label: 'المدونة' },
-                { href: '/about', label: 'من نحن' },
-                { href: '/contact', label: 'تواصل معنا' },
+                { href: '/', label: t('nav.home') },
+                { href: '/packages', label: t('nav.packages') },
+                { href: '/blog', label: t('nav.blog') },
+                { href: '/about', label: t('nav.about') },
+                { href: '/contact', label: t('footer.contactLink') },
               ].map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
                     className="transition-all hover:text-white hover:translate-x-[-4px] inline-flex items-center gap-2 no-underline group"
                   >
-                    <span className="text-[var(--accent)] opacity-0 group-hover:opacity-100 transition-opacity">←</span>
+                    <span className="text-[var(--accent)] opacity-0 group-hover:opacity-100 transition-opacity">
+                      ←
+                    </span>
                     {link.label}
                   </Link>
                 </li>
@@ -121,8 +132,8 @@ export default function Footer() {
 
           <div>
             <h4 className="text-white text-lg mb-4 font-extrabold flex items-center gap-2">
-              <span className="w-1 h-6 bg-[var(--accent)] rounded-full"></span>
-              تواصل معنا
+              <span className="w-1 h-6 bg-[var(--accent)] rounded-full" />
+              {t('footer.contact')}{/* 🔑 */}
             </h4>
             <ul className="list-none p-0 m-0 space-y-3">
               <li>
@@ -171,10 +182,10 @@ export default function Footer() {
           }}
         >
           <p className="m-0 text-[#b5d8c0]">
-            © {new Date().getFullYear()} عالم الصحة. جميع الحقوق محفوظة.
+            © {year} {t('nav.brand')}. {t('footer.rights')}
           </p>
           <p className="m-0 mt-2 text-sm text-[#8fb99a]">
-            مختبر طبي منزلي معتمد في الأردن
+            {t('footer.tagline')}
           </p>
         </div>
       </div>

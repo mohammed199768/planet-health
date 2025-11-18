@@ -1,9 +1,11 @@
+// components/BookPanel.tsx
 'use client';
 
 import { useState, FormEvent, useEffect } from 'react';
 import Image from 'next/image';
 import { createBooking, type BookingData } from '@/lib/firebase/bookings';
-import { trackEvent } from '@/lib/firebase/analytics'; // 👈 جديد
+import { trackEvent } from '@/lib/firebase/analytics';
+import { useI18n } from '@/components/LanguageProvider';
 
 const AMMAN_AREAS = {
   'غرب عمّان': [
@@ -26,6 +28,7 @@ const AMMAN_AREAS = {
 };
 
 export default function BookPanel() {
+  const { t } = useI18n();
   const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -33,7 +36,11 @@ export default function BookPanel() {
     location: '',
     package: '',
   });
-  const [alert, setAlert] = useState({ show: false, message: '', type: 'info' });
+  const [alert, setAlert] = useState<{ show: boolean; message: string; type: 'info' | 'error' | 'success' }>({
+    show: false,
+    message: '',
+    type: 'info',
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // فتح الفورم تلقائياً لو في ?package= بالـ URL
@@ -46,7 +53,6 @@ export default function BookPanel() {
         setFormData((prev) => ({ ...prev, package: packageParam }));
         setIsOpen(true);
 
-        // 🔹 حدث: فتح البوك بانل من URL مع package
         trackEvent('book_panel_open', {
           source: 'url_param',
           packageName: packageParam,
@@ -64,11 +70,10 @@ export default function BookPanel() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    setAlert({ show: true, message: 'يتم الإرسال…', type: 'info' });
+    setAlert({ show: true, message: t('book.alert.sending'), type: 'info' });
 
     const { name, phone, location } = formData;
 
-    // 🔹 حدث: محاولة حجز
     trackEvent('booking_attempt', {
       nameLength: name.trim().length,
       hasLocation: !!location,
@@ -78,11 +83,10 @@ export default function BookPanel() {
     if (name.trim().length < 3) {
       setAlert({
         show: true,
-        message: 'الاسم مطلوب (3 أحرف على الأقل).',
+        message: t('book.error.name'),
         type: 'error',
       });
 
-      // 🔹 حدث: فشل حجز بسبب الاسم
       trackEvent('booking_validation_error', {
         field: 'name',
         reason: 'too_short',
@@ -94,11 +98,10 @@ export default function BookPanel() {
     if (!/^07[789]\d{7}$/.test(phone)) {
       setAlert({
         show: true,
-        message: 'رقم الهاتف يجب أن يبدأ بـ 077/078/079 وأن يكون 10 أرقام.',
+        message: t('book.error.phone'),
         type: 'error',
       });
 
-      // 🔹 حدث: فشل حجز بسبب الهاتف
       trackEvent('booking_validation_error', {
         field: 'phone',
         reason: 'invalid_format',
@@ -114,7 +117,7 @@ export default function BookPanel() {
         name: name.trim(),
         phone: phone.trim(),
         address: location.trim(),
-        packageName: formData.package.trim() || 'غير محدد',
+        packageName: formData.package.trim() || t('book.package.unknown'),
         date: new Date().toISOString().split('T')[0],
         time: new Date().toLocaleTimeString('ar-JO'),
         notes: '',
@@ -125,42 +128,40 @@ export default function BookPanel() {
       if (result.success) {
         setAlert({
           show: true,
-          message: '✅ تم الإرسال بنجاح! سنتواصل معك قريبًا.',
+          message: t('book.success'),
           type: 'success',
         });
 
-        // 🔹 حدث: حجز ناجح
         trackEvent('booking_success', {
           packageName: bookingData.packageName,
           area: bookingData.address || null,
         });
 
-        setFormData({ name: '', phone: '', location: '', package: '' });
-
-        const msg = `طلب حجز مختبر:
-الاسم: ${name}
-الهاتف: ${phone}
-المنطقة: ${location || '-'}
-البكج: ${formData.package || '-'}`;
+        const msg = `${t('book.wa.title')}
+${t('book.wa.name')}: ${name}
+${t('book.wa.phone')}: ${phone}
+${t('book.wa.area')}: ${location || '-'}
+${t('book.wa.package')}: ${formData.package || '-'}`;
 
         window.open(
           `https://wa.me/962779667168?text=${encodeURIComponent(msg)}`,
           '_blank'
         );
+
+        setFormData({ name: '', phone: '', location: '', package: '' });
       } else {
-        throw new Error(result.error || 'حدث خطأ');
+        throw new Error(result.error || 'Error');
       }
     } catch (error) {
       console.error(error);
       setAlert({
         show: true,
-        message: 'حدث خطأ أثناء الإرسال.',
+        message: t('book.error.submit'),
         type: 'error',
       });
 
-      // 🔹 حدث: خطأ سيرفر/فايربيس
       trackEvent('booking_error', {
-        packageName: formData.package || 'غير محدد',
+        packageName: formData.package || t('book.package.unknown'),
       });
     } finally {
       setIsSubmitting(false);
@@ -172,7 +173,6 @@ export default function BookPanel() {
     setIsOpen(next);
 
     if (next) {
-      // 🔹 حدث: فتح البوك بانل يدويًا من الزر
       trackEvent('book_panel_open', {
         source: 'button',
         packageName: formData.package || null,
@@ -185,7 +185,6 @@ export default function BookPanel() {
       id="book-panel"
       className="relative w-full flex flex-col items-center gap-3.5"
     >
-      {/* هيدر البوكينج (البادج + النص + كبسة الفتح) */}
       <div
         className="bp-inner w-full rounded-[24px] px-4 py-3 sm:px-5 sm:py-4 flex flex-wrap items-center gap-2 sm:gap-3.5 shadow-lg backdrop-blur-md"
         style={{
@@ -195,42 +194,42 @@ export default function BookPanel() {
         }}
       >
         <div className="bp-badge inline-flex items-center bg-[var(--muted)] border border-[rgba(0,0,0,0.06)] rounded-full px-4 py-2 font-extrabold text-[var(--primary-dark)] shadow-md whitespace-nowrap gap-1.5">
-         <Image
-  src="/assets/images/logo.png"
-  width={32}
-  height={32}
-  className="block shrink-0"
-  alt="شعار"
-/>
-
+          <Image
+            src="/assets/images/logo.png"
+            width={32}
+            height={32}
+            className="block shrink-0"
+            alt="Rivera Clinic logo"
+          />
           <span className="pl-3 pr-1 text-[13px] sm:text-[14px] md:text-[15px]">
-            حجز المختبر
+            {t('book.badge')}
           </span>
         </div>
 
         <div className="bp-copy flex flex-col gap-0.5 min-w-0 hidden sm:flex">
-          <strong className="font-black text-[#17392d]">مختبرك لعندك</strong>
+          <strong className="font-black text-[#17392d]">
+            {t('book.title')}
+          </strong>
           <span className="text-[#486358] text-[13px]">
-            موعد سريع • أدوات معقمة
+            {t('book.subtitle')}
           </span>
         </div>
 
         <div className="flex-1 w-full sm:w-auto flex justify-end">
           <button
             className="btn whitespace-nowrap px-4 sm:px-5 py-2 text-sm md:text-base min-w-[140px] flex items-center justify-center transition-all duration-200 hover:scale-105 cursor-pointer w-full sm:w-auto"
-            onClick={handleToggleOpen} // 👈 استبدلنا setIsOpen المباشر
+            onClick={handleToggleOpen}
             type="button"
             style={{
               background: isOpen ? 'var(--primary-dark)' : 'var(--accent)',
               boxShadow: '0 4px 16px rgba(115,160,67,.35)',
             }}
           >
-            {isOpen ? 'إغلاق' : 'احجز الآن'}
+            {isOpen ? t('book.btn.close') : t('book.btn.open')}
           </button>
         </div>
       </div>
 
-      {/* الفورم */}
       <form
         onSubmit={handleSubmit}
         className={`book-form w-full rounded-[24px] px-4 py-4 sm:p-6 mt-1 transition-all duration-400 backdrop-blur-md ${
@@ -249,7 +248,7 @@ export default function BookPanel() {
           <input
             className="input"
             name="name"
-            placeholder="الاسم الكامل *"
+            placeholder={t('book.name')}
             value={formData.name}
             onChange={(e) =>
               setFormData({ ...formData, name: e.target.value })
@@ -259,7 +258,7 @@ export default function BookPanel() {
           <input
             className="input"
             name="phone"
-            placeholder="رقم الهاتف (077/078/079) *"
+            placeholder={t('book.phone')}
             value={formData.phone}
             onChange={(e) =>
               setFormData({ ...formData, phone: e.target.value })
@@ -278,7 +277,7 @@ export default function BookPanel() {
             }
             required
           >
-            <option value="">اختر المنطقة…</option>
+            <option value="">{t('book.location')}</option>
             {Object.entries(AMMAN_AREAS).map(([group, areas]) => (
               <optgroup key={group} label={group}>
                 {areas.map((area) => (
@@ -288,7 +287,7 @@ export default function BookPanel() {
                 ))}
               </optgroup>
             ))}
-            <option value="أخرى">أخرى</option>
+            <option value="أخرى">{t('book.locationOther')}</option>
           </select>
 
           <select
@@ -299,7 +298,8 @@ export default function BookPanel() {
               setFormData({ ...formData, package: e.target.value })
             }
           >
-            <option value="">اختر البكج (اختياري)</option>
+            <option value="">{t('book.package')}</option>
+            {/* تقدر لاحقاً تعمل mapping حسب اللغة، حالياً خلي الأسماء كما هي */}
             <option>باقة هشاشة العظام</option>
             <option>باقة مرضى القلب والضغط</option>
             <option>باقة متابعة السكري</option>
@@ -333,7 +333,7 @@ export default function BookPanel() {
               cursor: isSubmitting ? 'not-allowed' : 'pointer',
             }}
           >
-            {isSubmitting ? 'جارٍ الإرسال…' : 'احجز الآن'}
+            {isSubmitting ? t('book.btn.sending') : t('book.btn.submit')}
           </button>
         </div>
       </form>

@@ -4,11 +4,13 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
+import { useI18n } from '@/components/LanguageProvider';
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
+  const { lang, t, toggleLang } = useI18n();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -38,11 +40,11 @@ export default function Navbar() {
   }, [isMenuOpen]);
 
   const navLinks = [
-    { href: '/', label: 'الرئيسية' },
-    { href: '/packages', label: 'الباقات' },
-    { href: '/blog', label: 'المدونة' },
-    { href: '/about', label: 'من نحن' },
-    { href: '/contact', label: 'تواصل' },
+    { href: '/', labelKey: 'nav.home' },
+    { href: '/packages', labelKey: 'nav.packages' },
+    { href: '/blog', labelKey: 'nav.blog' },
+    { href: '/about', labelKey: 'nav.about' },
+    { href: '/contact', labelKey: 'nav.contact' },
   ];
 
   return (
@@ -62,24 +64,29 @@ export default function Navbar() {
       >
         <div className="container">
           <div className="flex items-center justify-between h-16">
-            <Link href="/" className="brand flex items-center gap-2.5 font-extrabold no-underline hover:no-underline">
-<div className="relative w-12 h-12">
-  <Image
-    src="/assets/images/logo.png"
-    alt="شعار عالم الصحة"
-    fill
-    sizes="48px"
-    className="rounded-full shadow-lg object-contain"
-    priority
-  />
-</div>
+            {/* الشعار + اسم البراند */}
+            <Link
+              href="/"
+              className="brand flex items-center gap-2.5 font-extrabold no-underline hover:no-underline"
+            >
+              <div className="relative w-12 h-12">
+                <Image
+                  src="/assets/images/logo.png"
+                  alt="Rivera Clinic logo"
+                  fill
+                  sizes="48px"
+                  className="rounded-full shadow-lg object-contain"
+                  priority
+                />
+              </div>
 
               <span className="text-white text-lg hidden sm:inline drop-shadow-md">
-                عالم الصحة
+                {t('nav.brand')}
               </span>
             </Link>
 
-            <div className="hidden lg:flex gap-4.5">
+            {/* روابط الديسكتوب + زر اللغة */}
+            <div className="hidden lg:flex gap-4.5 items-center">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
@@ -91,11 +98,21 @@ export default function Navbar() {
                   }`}
                   style={{ color: '#213' }}
                 >
-                  {link.label}
+                  {t(link.labelKey)}
                 </Link>
               ))}
+
+              {/* زر تبديل اللغة */}
+              <button
+                type="button"
+                onClick={toggleLang}
+                className="btn outline h-9 text-xs px-3"
+              >
+                {lang === 'ar' ? 'EN' : 'عربي'}
+              </button>
             </div>
 
+            {/* زر منيو الموبايل */}
             <button
               className="menu-toggle lg:hidden w-[46px] h-10 border-none bg-transparent cursor-pointer rounded-xl relative"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -122,6 +139,7 @@ export default function Navbar() {
         </div>
       </nav>
 
+      {/* منيو الموبايل */}
       <div
         className={`mobile-menu fixed inset-x-0 top-16 z-[998] transition-all duration-350 overflow-hidden ${
           isMenuOpen ? 'h-[calc(100vh-64px)]' : 'h-0'
@@ -161,9 +179,21 @@ export default function Navbar() {
               }}
               onClick={() => setIsMenuOpen(false)}
             >
-              {link.label}
+              {t(link.labelKey)}
             </Link>
           ))}
+
+          {/* زر اللغة في الموبايل */}
+          <button
+            type="button"
+            onClick={() => {
+              toggleLang();
+            }}
+            className="block py-3 px-3.5 rounded-xl font-bold no-underline transition-all bg-[rgba(0,0,0,0.04)] border-[rgba(0,0,0,0.10)] hover:bg-[rgba(0,0,0,0.08)] text-center"
+            style={{ color: '#0F172A', border: '1px solid' }}
+          >
+            {lang === 'ar' ? 'English' : 'العربية'}
+          </button>
 
           <Link
             href="/contact"
@@ -174,7 +204,7 @@ export default function Navbar() {
             }}
             onClick={() => setIsMenuOpen(false)}
           >
-            احجز الآن
+            {t('nav.bookNow')}
           </Link>
         </div>
       </div>

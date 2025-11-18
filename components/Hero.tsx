@@ -5,9 +5,12 @@ import Link from 'next/link';
 import Script from 'next/script';
 import BookPanel from './BookPanel';
 import DoctorBookPanel from './DoctorBookPanel';
+import { useI18n } from '@/components/LanguageProvider';
 
 export default function Hero() {
   const [activeBtn, setActiveBtn] = useState<'blood' | 'doctor' | 'packages' | null>(null);
+  const { t, lang } = useI18n(); // تأكد إن اسم الحقل lang مطابق للكونتكست عندك
+  const isEnglish = lang === 'en';
 
   const initParticles = useCallback(() => {
     if (typeof window === 'undefined') return;
@@ -127,26 +130,25 @@ export default function Hero() {
   }, []);
 
   // دالة عامة: تنزل على البانل وتفتحه
-const scrollToPanelAndOpen = (panelId: string) => {
-  if (typeof window === 'undefined') return;
+  const scrollToPanelAndOpen = (panelId: string) => {
+    if (typeof window === 'undefined') return;
 
-  const panel = document.getElementById(panelId);
-  if (!panel) return;
+    const panel = document.getElementById(panelId);
+    if (!panel) return;
 
-  panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
-  // نعطيه وقت يوصل ثم نضغط أول زر toggle جوّا البانل
-  setTimeout(() => {
-    const toggleButton = panel.querySelector(
-      'button[type="button"]'
-    ) as HTMLButtonElement | null;
+    // نعطيه وقت يوصل ثم نضغط أول زر toggle جوّا البانل
+    setTimeout(() => {
+      const toggleButton = panel.querySelector(
+        'button[type="button"]'
+      ) as HTMLButtonElement | null;
 
-    if (toggleButton) {
-      toggleButton.click();
-    }
-  }, 250);
-};
-
+      if (toggleButton) {
+        toggleButton.click();
+      }
+    }, 250);
+  };
 
   const handleBloodClick = () => {
     setActiveBtn('blood');
@@ -155,13 +157,12 @@ const scrollToPanelAndOpen = (panelId: string) => {
 
   const handleDoctorClick = () => {
     setActiveBtn('doctor');
-    scrollToPanelAndOpen('doctor-book-panel'); // سنضيف هذا الـ id حول DoctorBookPanel
+    scrollToPanelAndOpen('doctor-book-panel');
   };
 
   const handlePackagesClick = () => {
     setActiveBtn('packages');
-    // مجرد تلوين + انتقال للصفحة
-    // الـ Link نفسه يقوم بالتنقل
+    // مجرد تلوين + التنقل يتم عبر Link
   };
 
   return (
@@ -177,6 +178,7 @@ const scrollToPanelAndOpen = (panelId: string) => {
       />
 
       <header
+        dir={isEnglish ? 'ltr' : 'rtl'}
         className="relative overflow-hidden text-white"
         style={{
           background:
@@ -205,28 +207,29 @@ const scrollToPanelAndOpen = (panelId: string) => {
           <div className="flex flex-col lg:flex-row items-start lg:items-center gap-10 lg:gap-14">
             {/* النص */}
             <div
-              className="w-full lg:w-1/2 space-y-5 md:space-y-6"
+              className={`w-full lg:w-1/2 space-y-5 md:space-y-6 ${
+                isEnglish ? 'text-left' : 'text-right'
+              }`}
               style={{ animation: 'fadeInUp 0.8s ease-out' }}
             >
               <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 bg-white/10 border border-white/30 backdrop-blur-md shadow-md">
                 <span className="w-2 h-2 rounded-full bg-[var(--accent)]" />
                 <span className="text-xs md:text-sm font-semibold">
-                  عالم الصحة المختبر لعندك
+                  {t('hero.badge')}
                 </span>
               </div>
 
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-black leading-snug md:leading-tight text-white drop-shadow-sm">
-                فحوصات مخبرية
+                {t('hero.title.line1')}
                 <br className="hidden md:block" />
-                <span className="text-[var(--accent)]"> وسحب دم منزلي </span>
-                لعائلتك
+                <span className="text-[var(--accent)]">
+                  {t('hero.title.highlight')}
+                </span>{' '}
+                {t('hero.title.line2')}
               </h1>
 
               <p className="text-sm md:text-base lg:text-lg text-[#e4f5ea] max-w-xl leading-relaxed">
-                فريق مختبر منزلي يصل لعندك في عمّان بمواعيد مرنة، أدوات معقمة،
-                ونتائج موثوقة على واتساب. الآن أيضاً:
-                <span className="font-bold"> حجز طبيب منزلي </span>
-                لكبار السن والحالات الخاصة.
+                {t('hero.description')}
               </p>
 
               {/* الأزرار التفاعلية */}
@@ -242,7 +245,7 @@ const scrollToPanelAndOpen = (panelId: string) => {
                     activeBtn === 'blood' ? 'hero-btn--active' : ''
                   }`}
                 >
-                  احجز سحب دم منزلي
+                  {t('hero.btn.blood')}
                 </button>
 
                 {/* احجز طبيب منزلي */}
@@ -253,7 +256,7 @@ const scrollToPanelAndOpen = (panelId: string) => {
                     activeBtn === 'doctor' ? 'hero-btn--active' : ''
                   }`}
                 >
-                  احجز طبيب منزلي
+                  {t('hero.btn.doctor')}
                 </button>
 
                 {/* تعرّف على الباقات */}
@@ -264,16 +267,16 @@ const scrollToPanelAndOpen = (panelId: string) => {
                     activeBtn === 'packages' ? 'hero-btn--active' : ''
                   }`}
                 >
-                  تعرّف على الباقات
+                  {t('hero.btn.packages')}
                 </Link>
               </div>
 
               <div className="flex flex-wrap items-center gap-3 text-xs md:text-sm text-[#d4ecde] mt-4">
-                <span>✅ مختبرات معتمدة</span>
+                <span>{t('hero.bullet.1')}</span>
                 <span className="w-1 h-1 rounded-full bg-white/60" />
-                <span>🕒 حجز خلال أقل من دقيقة</span>
+                <span>{t('hero.bullet.2')}</span>
                 <span className="w-1 h-1 rounded-full bg-white/60" />
-                <span>📍 عمّان — وضواحيها</span>
+                <span>{t('hero.bullet.3')}</span>
               </div>
             </div>
 
@@ -286,7 +289,6 @@ const scrollToPanelAndOpen = (panelId: string) => {
                 <BookPanel />
               </div>
 
-              {/* لاحِظ إضافة id هنا */}
               <div
                 id="doctor-book-panel"
                 className="w-full flex justify-center"

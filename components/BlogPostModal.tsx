@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import Image from 'next/image';
 import type { Post } from '@/lib/data/posts';
+import { useI18n } from '@/components/LanguageProvider';
 
 interface BlogPostModalProps {
   post: Post | null;
@@ -11,12 +12,10 @@ interface BlogPostModalProps {
 }
 
 export default function BlogPostModal({ post, isOpen, onClose }: BlogPostModalProps) {
+  const { t, lang } = useI18n();
+
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
+    document.body.style.overflow = isOpen ? 'hidden' : 'unset';
     return () => {
       document.body.style.overflow = 'unset';
     };
@@ -34,11 +33,34 @@ export default function BlogPostModal({ post, isOpen, onClose }: BlogPostModalPr
 
   if (!isOpen || !post) return null;
 
-  const shareUrl = typeof window !== 'undefined' ? window.location.origin + '/blog/' + post.slug : '';
+  const shareUrl =
+    typeof window !== 'undefined'
+      ? window.location.origin + '/blog/' + post.slug
+      : '';
   const shareText = encodeURIComponent(post.title);
 
-  const facebookShare = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
+  const facebookShare = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+    shareUrl
+  )}`;
   const instagramShare = `https://www.instagram.com/`;
+
+  const formattedDate = new Date(post.date).toLocaleDateString(
+    lang === 'ar' ? 'ar-SA' : 'en-US',
+    { year: 'numeric', month: 'long', day: 'numeric' }
+  );
+
+  const handleCopyLink = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: post.title,
+        text: post.excerpt,
+        url: shareUrl,
+      });
+    } else {
+      navigator.clipboard.writeText(shareUrl);
+      alert(t('blog.share.copied')); // 🔑
+    }
+  };
 
   return (
     <div
@@ -52,7 +74,7 @@ export default function BlogPostModal({ post, isOpen, onClose }: BlogPostModalPr
         <button
           onClick={onClose}
           className="absolute top-6 left-6 z-20 w-12 h-12 flex items-center justify-center bg-white/95 hover:bg-white rounded-full shadow-xl transition-all hover:scale-110 hover:rotate-90"
-          aria-label="إغلاق"
+          aria-label={t('common.close')} // 🔑
         >
           <span className="text-3xl text-[var(--primary-dark)] font-light">×</span>
         </button>
@@ -87,14 +109,14 @@ export default function BlogPostModal({ post, isOpen, onClose }: BlogPostModalPr
                     <span className="font-semibold">{post.author}</span>
                   </div>
                 )}
-                <span className="w-1 h-1 bg-white/60 rounded-full"></span>
+                <span className="w-1 h-1 bg-white/60 rounded-full" />
                 <div className="flex items-center gap-2">
                   <span>📅</span>
-                  <span>{new Date(post.date).toLocaleDateString('ar-SA', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                  <span>{formattedDate}</span>
                 </div>
                 {post.readTime && (
                   <>
-                    <span className="w-1 h-1 bg-white/60 rounded-full"></span>
+                    <span className="w-1 h-1 bg-white/60 rounded-full" />
                     <div className="flex items-center gap-2">
                       <span>⏱️</span>
                       <span>{post.readTime}</span>
@@ -121,8 +143,10 @@ export default function BlogPostModal({ post, isOpen, onClose }: BlogPostModalPr
                     if (paragraph.trim().startsWith('-')) {
                       return (
                         <div key={idx} className="flex items-start gap-3 py-2">
-                          <span className="flex-shrink-0 w-2 h-2 bg-[var(--accent)] rounded-full mt-2"></span>
-                          <p className="text-base md:text-lg m-0">{paragraph.trim().substring(1).trim()}</p>
+                          <span className="flex-shrink-0 w-2 h-2 bg-[var(--accent)] rounded-full mt-2" />
+                          <p className="text-base md:text-lg m-0">
+                            {paragraph.trim().substring(1).trim()}
+                          </p>
                         </div>
                       );
                     }
@@ -138,7 +162,7 @@ export default function BlogPostModal({ post, isOpen, onClose }: BlogPostModalPr
 
               <div className="mt-12 pt-8 border-t-2 border-[var(--muted)]">
                 <h3 className="text-xl md:text-2xl font-extrabold text-[var(--primary-dark)] mb-6">
-                  شارك هذا المقال
+                  {t('blog.share.title')}{/* 🔑 */}
                 </h3>
                 <div className="flex flex-wrap gap-4">
                   <a
@@ -147,6 +171,7 @@ export default function BlogPostModal({ post, isOpen, onClose }: BlogPostModalPr
                     rel="noopener noreferrer"
                     className="flex items-center gap-3 px-6 py-3 bg-[#1877f2] text-white rounded-xl hover:shadow-xl transition-all hover:scale-105 font-semibold"
                   >
+                    {/* الاسم يضل English */}
                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
                     </svg>
@@ -166,22 +191,12 @@ export default function BlogPostModal({ post, isOpen, onClose }: BlogPostModalPr
                   </a>
 
                   <button
-                    onClick={() => {
-                      if (navigator.share) {
-                        navigator.share({
-                          title: post.title,
-                          text: post.excerpt,
-                          url: shareUrl,
-                        });
-                      } else {
-                        navigator.clipboard.writeText(shareUrl);
-                        alert('تم نسخ رابط المقال!');
-                      }
-                    }}
+                    type="button"
+                    onClick={handleCopyLink}
                     className="flex items-center gap-3 px-6 py-3 bg-[var(--primary-dark)] text-white rounded-xl hover:shadow-xl transition-all hover:scale-105 font-semibold"
                   >
                     <span>🔗</span>
-                    <span>نسخ الرابط</span>
+                    <span>{t('blog.share.copyLink')}</span>
                   </button>
                 </div>
               </div>
@@ -197,7 +212,7 @@ export default function BlogPostModal({ post, isOpen, onClose }: BlogPostModalPr
                         {post.author}
                       </h4>
                       <p className="text-sm text-[#5f7b71]">
-                        كاتب ومتخصص في المجال الطبي
+                        {t('blog.author.defaultBio')}
                       </p>
                     </div>
                   </div>
