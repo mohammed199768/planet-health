@@ -155,7 +155,7 @@ export default function Footer() {
                   <span className="w-9 h-9 rounded-lg bg-[rgba(115,160,67,0.15)] flex items-center justify-center group-hover:bg-[var(--accent)] transition-all">
                     <i className="fas fa-envelope text-[var(--accent)] group-hover:text-white transition-colors" />
                   </span>
-                  <span className="break-all">contact@homoblood.online</span>
+                  <span className="break-all">contact@curevie.net</span>
                 </a>
               </li>
               <li>
@@ -168,7 +168,7 @@ export default function Footer() {
                   <span className="w-9 h-9 rounded-lg bg-[rgba(115,160,67,0.15)] flex items-center justify-center group-hover:bg-[var(--accent)] transition-all">
                     <i className="fab fa-instagram text-[var(--accent)] group-hover:text-white transition-colors" />
                   </span>
-                  <span>homoblood@</span>
+                  <span>curevi@</span>
                 </a>
               </li>
             </ul>
