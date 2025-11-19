@@ -149,7 +149,7 @@ export default function Footer() {
               </li>
               <li>
                 <a
-                  href="mailto:contact@homoblood.online"
+                  href="mailto:contact@curevie.net"
                   className="transition-all hover:text-white no-underline flex items-center gap-3 group"
                 >
                   <span className="w-9 h-9 rounded-lg bg-[rgba(115,160,67,0.15)] flex items-center justify-center group-hover:bg-[var(--accent)] transition-all">

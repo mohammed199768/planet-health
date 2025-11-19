@@ -13,7 +13,7 @@ export const translations: Record<Lang, Record<string, string>> = {
     'nav.bookNow': 'احجز الآن',
 
     // Hero
-    'hero.badge': 'Curevie — المختبر لعندك',
+    'hero.badge': 'Curevie  المختبر لعندك',
     'hero.title.line1': 'فحوصات طبية',
     'hero.title.highlight': 'وفحوصات مخبرية  ',
     'hero.title.line2': 'من منزلك',
@@ -167,7 +167,7 @@ export const translations: Record<Lang, Record<string, string>> = {
     'contact.methods.phone.title': 'الهاتف',
     'contact.methods.phone.value': '0779667168',
     'contact.methods.email.title': 'البريد الإلكتروني',
-    'contact.methods.email.value': 'contact@homoblood.online',
+    'contact.methods.email.value': 'contact@curevie.net',
     'contact.methods.location.title': 'الموقع',
     'contact.methods.location.value': 'الأردن - عمّان',
     'contact.form.title': 'راسلنا',
@@ -219,7 +219,7 @@ export const translations: Record<Lang, Record<string, string>> = {
     'nav.bookNow': 'Book Now',
 
     // Hero
-    'hero.badge': 'Curevie — Home Lab Service',
+    'hero.badge': 'Curevie  Home Lab Service',
     'hero.title.line1': 'Medical tests',
     'hero.title.highlight': 'and laboratory services',
     'hero.title.line2': 'from your home',
@@ -383,7 +383,7 @@ export const translations: Record<Lang, Record<string, string>> = {
     'contact.methods.phone.title': 'Phone',
     'contact.methods.phone.value': '0779667168',
     'contact.methods.email.title': 'Email',
-    'contact.methods.email.value': 'contact@homoblood.online',
+    'contact.methods.email.value': 'contact@curevie.net',
     'contact.methods.location.title': 'Location',
     'contact.methods.location.value': 'Jordan — Amman',
 
