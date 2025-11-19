@@ -59,7 +59,7 @@ export default function ContactPage() {
     try {
       const formspreeEndpoint =
         process.env.NEXT_PUBLIC_FORMSPREE_ENDPOINT ||
-        'https://formspree.io/f/xyzkvlbq';
+        'https://formspree.io/f/mvglrwzk';
 
       const response = await fetch(formspreeEndpoint, {
         method: 'POST',
