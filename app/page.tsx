@@ -4,7 +4,7 @@ import PackagesSection from '@/components/PackagesSection';
 import TestimonialsSection from '@/components/TestimonialsSection';
 
 export const metadata: Metadata = {
-  title: 'عالم الصحة — المختبر لعندك',
+  title: 'curevie المختبر من بيتك',
   description: 'مبادرة أردنية لتقديم خدمات المختبر إلى باب بيتك — بدقة، خصوصية، وثقة.',
 };
 

@@ -14,8 +14,8 @@ export const translations: Record<Lang, Record<string, string>> = {
 
     // Hero
     'hero.badge': 'Curevie  المختبر لعندك',
-    'hero.title.line1': 'فحوصات طبية',
-    'hero.title.highlight': 'وفحوصات مخبرية  ',
+    'hero.title.line1': 'خدمات طبية',
+    'hero.title.highlight': ' وفحوصات مخبرية ',
     'hero.title.line2': 'من منزلك',
     'hero.description':
       'فريق طبي مختص يصل لعندك في منزلك بمواعيد مرنه.اجهزة معقمة ونتائج موثوقة ومضمونة . نتيجتكم على الواتساب  اريحلكم . ويمكن حجز طبيب منزلي لجميع الاعمار والحلات.',
