@@ -14,7 +14,7 @@ const cairo = Cairo({
 });
 
 export const metadata: Metadata = {
-  title: 'curevie',
+  title: 'Curevie',
   description:
     'مبادرة أردنية لتقديم خدمات المختبر إلى باب بيتك — بدقة، خصوصية، وثقة.',
   keywords: ['مختبر منزلي', 'فحوصات طبية', 'الأردن', 'عمان', 'سحب دم منزلي'],
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   },
 
   openGraph: {
-    title: 'curevie',
+    title: 'Curevie',
     description: 'مبادرة أردنية لتقديم خدمات المختبر إلى باب بيتك',
     url: 'https://planet-health-jo.com', // إن توفر
     siteName: 'عالم الصحة',

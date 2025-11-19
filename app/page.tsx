@@ -4,7 +4,7 @@ import PackagesSection from '@/components/PackagesSection';
 import TestimonialsSection from '@/components/TestimonialsSection';
 
 export const metadata: Metadata = {
-  title: 'curevie المختبر من بيتك',
+  title: 'Curevie ',
   description: 'مبادرة أردنية لتقديم خدمات المختبر إلى باب بيتك — بدقة، خصوصية، وثقة.',
 };
 
