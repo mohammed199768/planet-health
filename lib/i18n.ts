@@ -13,7 +13,7 @@ export const translations: Record<Lang, Record<string, string>> = {
     'nav.bookNow': 'احجز الآن',
 
     // Hero
-    'hero.badge': 'Curevie  المختبر لعندك',
+    'hero.badge': 'Curevie  المختبر من بيتك ',
     'hero.title.line1': 'خدمات طبية',
     'hero.title.highlight': ' وفحوصات مخبرية ',
     'hero.title.line2': 'من منزلك',
