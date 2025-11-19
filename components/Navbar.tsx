@@ -26,7 +26,7 @@ export default function Navbar() {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = '';
-    }
+    };
 
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === 'Escape') setIsMenuOpen(false);
@@ -46,6 +46,11 @@ export default function Navbar() {
     { href: '/about', labelKey: 'nav.about' },
     { href: '/contact', labelKey: 'nav.contact' },
   ];
+
+  const brandTagline =
+    lang === 'ar'
+      ? 'المختبر والعيادة لعندك'
+      : 'Home lab & clinic';
 
   return (
     <>
@@ -67,20 +72,51 @@ export default function Navbar() {
             {/* الشعار + اسم البراند */}
             <Link
               href="/"
-              className="brand flex items-center gap-2.5 font-extrabold no-underline hover:no-underline"
+              className="brand flex items-center gap-3 font-extrabold no-underline hover:no-underline"
             >
-              <div className="relative w-12 h-12">
+              <div className="relative w-11 h-11 sm:w-12 sm:h-12">
                 <Image
                   src="/assets/images/logo.png"
-                  alt="Rivera Clinic logo"
+                  alt="Curevie logo"
                   fill
                   sizes="48px"
                   className="rounded-full shadow-lg object-contain"
                   priority
                 />
               </div>
+<div className="hidden sm:flex flex-col leading-tight select-none">
+  {/* اسم البراند: ناعم وراقي */}
+  <span
+    className="
+      text-[1.32rem]
+      font-bold
+      tracking-[0.02em]
+      text-[#3A6F7A]/85
+      drop-shadow-[0_0.5px_1px_rgba(255,255,255,0.55)]
+      antialiased
+    "
+  >
+    {t('nav.brand')}
+  </span>
 
-              <span className="text-white text-lg hidden sm:inline drop-shadow-md">
+  {/* تاغلاين فاين جداً */}
+  <span
+    className="
+      text-[11px]
+      font-medium
+      tracking-[0.15em]
+      text-[#1a1f2b]/60
+      drop-shadow-[0_0.5px_1px_rgba(255,255,255,0.38)]
+      antialiased
+    "
+  >
+    {brandTagline}
+  </span>
+</div>
+
+
+              {/* في الشاشات الصغيرة نعرض فقط الاسم بدون التاغلاين */}
+              <span className="sm:hidden text-white text-lg drop-shadow-md">
                 {t('nav.brand')}
               </span>
             </Link>
